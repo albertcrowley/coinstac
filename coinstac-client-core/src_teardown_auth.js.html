@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/teardown/auth.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Auth.html">Auth</a><ul class='methods'><li data-type='method'><a href="Auth.html#createUser">createUser</a></li><li data-type='method'><a href="Auth.html#getUser">getUser</a></li><li data-type='method'><a href="Auth.html#login">login</a></li><li data-type='method'><a href="Auth.html#logout">logout</a></li><li data-type='method'><a href="Auth.html#setUser">setUser</a></li></ul></li><li><a href="CoinstacClient.html">CoinstacClient</a><ul class='methods'><li data-type='method'><a href="CoinstacClient.html#_initAuthorization">_initAuthorization</a></li><li data-type='method'><a href="CoinstacClient.html#_initSubAPIs">_initSubAPIs</a></li><li data-type='method'><a href="CoinstacClient.html#initialize">initialize</a></li><li data-type='method'><a href="CoinstacClient.html#teardown">teardown</a></li></ul></li><li><a href="ModelService.html">ModelService</a><ul class='methods'><li data-type='method'><a href="ModelService.html#all">all</a></li><li data-type='method'><a href="ModelService.html#delete">delete</a></li><li data-type='method'><a href="ModelService.html#get">get</a></li><li data-type='method'><a href="ModelService.html#getBy">getBy</a></li><li data-type='method'><a href="ModelService.html#modelServiceHooks">modelServiceHooks</a></li><li data-type='method'><a href="ModelService.html#save">save</a></li><li data-type='method'><a href="ModelService.html#validate">validate</a></li></ul></li><li><a href="module-computation-service-ComputationService.html">ComputationService</a><ul class='methods'><li data-type='method'><a href="module-computation-service-ComputationService.html#all">all</a></li><li data-type='method'><a href="module-computation-service-ComputationService.html#delete">delete</a></li><li data-type='method'><a href="module-computation-service-ComputationService.html#get">get</a></li><li data-type='method'><a href="module-computation-service-ComputationService.html#getBy">getBy</a></li><li data-type='method'><a href="module-computation-service-ComputationService.html#kickoff">kickoff</a></li><li data-type='method'><a href="module-computation-service-ComputationService.html#modelServiceHooks">modelServiceHooks</a></li><li data-type='method'><a href="module-computation-service-ComputationService.html#save">save</a></li><li data-type='method'><a href="module-computation-service-ComputationService.html#validate">validate</a></li></ul></li><li><a href="module-project-service-ProjectService.html">ProjectService</a><ul class='methods'><li data-type='method'><a href="module-project-service-ProjectService.html#addFiles">addFiles</a></li><li data-type='method'><a href="module-project-service-ProjectService.html#all">all</a></li><li data-type='method'><a href="module-project-service-ProjectService.html#delete">delete</a></li><li data-type='method'><a href="module-project-service-ProjectService.html#get">get</a></li><li data-type='method'><a href="module-project-service-ProjectService.html#getBy">getBy</a></li><li data-type='method'><a href="module-project-service-ProjectService.html#getFileStats">getFileStats</a></li><li data-type='method'><a href="module-project-service-ProjectService.html#modelServiceHooks">modelServiceHooks</a></li><li data-type='method'><a href="module-project-service-ProjectService.html#removeFiles">removeFiles</a></li><li data-type='method'><a href="module-project-service-ProjectService.html#save">save</a></li><li data-type='method'><a href="module-project-service-ProjectService.html#validate">validate</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="Common%2520access%2520point%2520for%2520the%2520test%2520directory.%2520This%2520should%2520be%2520used%2520by%2520all%250Athings%2520writing%2520to%2520disc%2520during%2520test%2520runs.module_.html">Common access point for the test directory. This should be used by all
+things writing to disc during test runs.</a></li><li><a href="module-applicationDirectory.html">applicationDirectory</a></li><li><a href="module-computation-service.html">computation-service</a></li><li><a href="module-consortia-service.html">consortia-service</a></li><li><a href="module-project-files.html">project-files</a><ul class='methods'><li data-type='method'><a href="module-project-files.html#.prepare">prepare</a></li></ul></li><li><a href="module-project-service.html">project-service</a></li><li><a href="module-teardown-auth.html">teardown-auth</a><ul class='methods'><li data-type='method'><a href="module-teardown-auth.html#.teardownAuth">teardownAuth</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#getStubbedParams">getStubbedParams</a></li><li><a href="global.html#initializeAPIClient">initializeAPIClient</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">src/teardown/auth.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+
+const bluebird = require('bluebird');
+
+/**
+ * @module teardown-auth
+ */
+
+/**
+ * logs out and clear credential cache
+ * @param {CoinstacClient} coinstacClient
+ * @param {function} cb cb(err, rslt). `rslt` _is not guaranteed_
+ *
+ */
+module.exports.teardownAuth = (coinstacClient, cb) => {
+  const p = coinstacClient.auth.logout();
+  return bluebird.resolve(p).asCallback(cb);
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/services/computations-database-syncer.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-server.html">server</a><ul class='methods'><li data-type='method'><a href="module-server.html#.start">start</a></li><li data-type='method'><a href="module-server.html#.stop">stop</a></li></ul></li><li><a href="module-service_computation-registry.html">service/computation-registry</a><ul class='methods'><li data-type='method'><a href="module-service_computation-registry.html#.get">get</a></li><li data-type='method'><a href="module-service_computation-registry.html#.getComputationsPath">getComputationsPath</a></li><li data-type='method'><a href="module-service_computation-registry.html#.init">init</a></li><li data-type='method'><a href="module-service_computation-registry.html#.teardown">teardown</a></li><li data-type='method'><a href="module-service_computation-registry.html#.upsertComputationsDir">upsertComputationsDir</a></li></ul></li><li><a href="module-service_computations-database-syncer.html">service/computations-database-syncer</a><ul class='methods'><li data-type='method'><a href="module-service_computations-database-syncer.html#~getComputationFinder">getComputationFinder</a></li><li data-type='method'><a href="module-service_computations-database-syncer.html#~sync">sync</a></li></ul></li><li><a href="module-service_db-registry.html">service/db-registry</a><ul class='methods'><li data-type='method'><a href="module-service_db-registry.html#.get">get</a></li><li data-type='method'><a href="module-service_db-registry.html#.getDBPath">getDBPath</a></li><li data-type='method'><a href="module-service_db-registry.html#.init">init</a></li><li data-type='method'><a href="module-service_db-registry.html#.teardown">teardown</a></li><li data-type='method'><a href="module-service_db-registry.html#.upsertDBDir">upsertDBDir</a></li></ul></li><li><a href="module-service_logger.html">service/logger</a></li><li><a href="module-service_remote-pipeline-runner-pool.html">service/remote-pipeline-runner-pool</a><ul class='methods'><li data-type='method'><a href="module-service_remote-pipeline-runner-pool.html#.init">init</a></li><li data-type='method'><a href="module-service_remote-pipeline-runner-pool.html#.teardown">teardown</a></li></ul></li><li><a href="module-service_seed-consortia.html">service/seed-consortia</a></li></ul><h3>Global</h3><ul><li><a href="global.html#failStderr">failStderr</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">src/services/computations-database-syncer.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+
+/**
+ * @module service/computations-database-syncer
+ */
+
+const computationRegistryService = require('./computation-registry');
+const dbRegistryService = require('./db-registry');
+const spread = require('lodash/spread');
+
+/**
+ * Get a computation finder function.
+ *
+ * @param {Object} target
+ * @param {string} target.name
+ * @param {string} target.version
+ * @returns {Function}
+ */
+function getComputationFinder(target) {
+  return function computationFinder(computation) {
+    return (
+      computation.name === target.name &amp;&amp; computation.version === target.version
+    );
+  };
+}
+
+/**
+ * Get computation documents diff.
+ *
+ * Identifies which decentralized computations from the "golden set" are
+ * missing from the computation database's documents, which exist in the db
+ * but aren't in the golden set, and those that need to be updated.
+ *
+ * @private
+ *
+ * @see ComputationRegistry
+ * @see DecentralizedComputation
+ *
+ * @param {DecentralizedComputation[]} decentralizedComputations "Golden set"
+ * of white-listed decentralized computation models
+ * @param {Object[]} computationDocs Existing computations in the database
+ * @returns {Object} Diff object, where each value set is ready for db
+ * `bulkDoc`ing. shape ~= { add:/delete:/update: }
+ */
+function getComputationsDiff(decentralizedComputations, computationDocs) {
+  const toAdd = [];
+  const toUpdate = [];
+
+  decentralizedComputations.forEach(computation => {
+    const matchingDoc = computationDocs.find(
+      getComputationFinder(computation)
+    );
+
+    if (!matchingDoc) {
+      toAdd.push(computation.getComputationDocument());
+    } else {
+      // Ensure the `_id` and `_rev` are added so PouchDB does an update
+      toUpdate.push(Object.assign(
+        {},
+        matchingDoc,
+        computation.getComputationDocument()
+      ));
+    }
+  });
+
+  const toDelete = computationDocs.reduce((memo, doc) => {
+    if (!decentralizedComputations.some(getComputationFinder(doc))) {
+      return memo.concat(Object.assign({}, doc, { _deleted: true }));
+    }
+
+    return memo;
+  }, []);
+
+  return {
+    add: toAdd,
+    delete: toDelete,
+    update: toUpdate,
+  };
+}
+
+/**
+ * update database with computation diff. diff represents
+ * the difference between the server's current database state
+ * and the computations requested per the coinstac computation
+ * whitelist
+ * @private
+ * @param {object} diff
+ * @returns {Promise} Resolves with diff object
+ */
+function patchDBWithComputationDiff(diff) {
+  const computationsDb = dbRegistryService.get().get('computations');
+
+  return computationsDb.bulkDocs(diff.add)
+  .then(() => computationsDb.bulkDocs(diff.update))
+  .then(() => computationsDb.bulkDocs(diff.delete))
+  .then(() => diff);
+}
+
+/**
+ * Sync computations with the database.
+ *
+ * Update the computations db store to match computations as represented by
+ * the goldenset/whitelist. The remote ComputationRegistry uses the JSON file
+ * as its whitelist.
+ *
+ * @returns {Promise} Resolves with diff object
+ */
+function sync() {
+  return Promise.all([
+    computationRegistryService.get().all(),
+    dbRegistryService.get().get('computations').all(),
+  ])
+    .then(spread(getComputationsDiff))
+    .then(patchDBWithComputationDiff);
+}
+
+/* eslint-disable object-shorthand */
+module.exports = {
+  getComputationsDiff: getComputationsDiff,
+  patchDBWithComputationDiff: patchDBWithComputationDiff,
+  sync: sync,
+};
+/* eslint-enable object-shorthand */
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

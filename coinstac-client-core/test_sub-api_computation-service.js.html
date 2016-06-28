@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>test/sub-api/computation-service.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Auth.html">Auth</a><ul class='methods'><li data-type='method'><a href="Auth.html#createUser">createUser</a></li><li data-type='method'><a href="Auth.html#getUser">getUser</a></li><li data-type='method'><a href="Auth.html#login">login</a></li><li data-type='method'><a href="Auth.html#logout">logout</a></li><li data-type='method'><a href="Auth.html#setUser">setUser</a></li></ul></li><li><a href="CoinstacClient.html">CoinstacClient</a><ul class='methods'><li data-type='method'><a href="CoinstacClient.html#_initAuthorization">_initAuthorization</a></li><li data-type='method'><a href="CoinstacClient.html#_initSubAPIs">_initSubAPIs</a></li><li data-type='method'><a href="CoinstacClient.html#initialize">initialize</a></li><li data-type='method'><a href="CoinstacClient.html#teardown">teardown</a></li></ul></li><li><a href="ModelService.html">ModelService</a><ul class='methods'><li data-type='method'><a href="ModelService.html#all">all</a></li><li data-type='method'><a href="ModelService.html#delete">delete</a></li><li data-type='method'><a href="ModelService.html#get">get</a></li><li data-type='method'><a href="ModelService.html#getBy">getBy</a></li><li data-type='method'><a href="ModelService.html#modelServiceHooks">modelServiceHooks</a></li><li data-type='method'><a href="ModelService.html#save">save</a></li><li data-type='method'><a href="ModelService.html#validate">validate</a></li></ul></li><li><a href="module-computation-service-ComputationService.html">ComputationService</a><ul class='methods'><li data-type='method'><a href="module-computation-service-ComputationService.html#all">all</a></li><li data-type='method'><a href="module-computation-service-ComputationService.html#delete">delete</a></li><li data-type='method'><a href="module-computation-service-ComputationService.html#get">get</a></li><li data-type='method'><a href="module-computation-service-ComputationService.html#getBy">getBy</a></li><li data-type='method'><a href="module-computation-service-ComputationService.html#kickoff">kickoff</a></li><li data-type='method'><a href="module-computation-service-ComputationService.html#modelServiceHooks">modelServiceHooks</a></li><li data-type='method'><a href="module-computation-service-ComputationService.html#save">save</a></li><li data-type='method'><a href="module-computation-service-ComputationService.html#validate">validate</a></li></ul></li><li><a href="module-project-service-ProjectService.html">ProjectService</a><ul class='methods'><li data-type='method'><a href="module-project-service-ProjectService.html#addFiles">addFiles</a></li><li data-type='method'><a href="module-project-service-ProjectService.html#all">all</a></li><li data-type='method'><a href="module-project-service-ProjectService.html#delete">delete</a></li><li data-type='method'><a href="module-project-service-ProjectService.html#get">get</a></li><li data-type='method'><a href="module-project-service-ProjectService.html#getBy">getBy</a></li><li data-type='method'><a href="module-project-service-ProjectService.html#getFileStats">getFileStats</a></li><li data-type='method'><a href="module-project-service-ProjectService.html#modelServiceHooks">modelServiceHooks</a></li><li data-type='method'><a href="module-project-service-ProjectService.html#removeFiles">removeFiles</a></li><li data-type='method'><a href="module-project-service-ProjectService.html#save">save</a></li><li data-type='method'><a href="module-project-service-ProjectService.html#validate">validate</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="Common%2520access%2520point%2520for%2520the%2520test%2520directory.%2520This%2520should%2520be%2520used%2520by%2520all%250Athings%2520writing%2520to%2520disc%2520during%2520test%2520runs.module_.html">Common access point for the test directory. This should be used by all
+things writing to disc during test runs.</a></li><li><a href="module-applicationDirectory.html">applicationDirectory</a></li><li><a href="module-computation-service.html">computation-service</a></li><li><a href="module-consortia-service.html">consortia-service</a></li><li><a href="module-project-files.html">project-files</a><ul class='methods'><li data-type='method'><a href="module-project-files.html#.prepare">prepare</a></li></ul></li><li><a href="module-project-service.html">project-service</a></li><li><a href="module-teardown-auth.html">teardown-auth</a><ul class='methods'><li data-type='method'><a href="module-teardown-auth.html#.teardownAuth">teardownAuth</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#getStubbedParams">getStubbedParams</a></li><li><a href="global.html#initializeAPIClient">initializeAPIClient</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">test/sub-api/computation-service.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+
+const common = require('coinstac-common');
+const ComputationService = require('../../src/sub-api/computation-service');
+const sinon = require('sinon');
+const tape = require('tape');
+
+const Computation = common.models.computation.Computation;
+const RemoteComputationResult = common.models.computation.RemoteComputationResult;
+
+/**
+ * Get stubbed params fro `ComputationService#kickoff`.
+ *
+ * @returns {Object}
+ */
+function getStubbedParams() {
+  return {
+    client: {
+      consortia: {
+        db: {
+          get: sinon.stub(),
+        },
+      },
+      projects: {
+        db: {
+          get: sinon.stub(),
+        },
+      },
+      pool: {
+        triggerRunner: sinon.stub().returns(Promise.resolve()),
+      },
+    },
+    dbRegistry: {},
+  };
+}
+
+tape('ComputationService :: modelServiceHooks', t => {
+  const computationService = new ComputationService({
+    client: {},
+    dbRegistry: {},
+  });
+  const modelServiceHooks = computationService.modelServiceHooks();
+
+  t.equal(modelServiceHooks.dbName, 'computations', 'returns db name');
+  t.equal(modelServiceHooks.ModelType, Computation, 'returns Computation model');
+
+  t.end();
+});
+
+tape('ComputationService :: kickoff errors', t => {
+  const params = getStubbedParams();
+  const computationService = new ComputationService(params);
+
+  params.client.consortia.db.get.returns(Promise.resolve({
+    _id: 'bla bla bla',
+    label: 'WAT is consortium?',
+  }));
+  params.client.projects.db.get.returns(Promise.resolve({
+    _id: 'wat wat wat',
+    label: 'Bla is project?',
+  }));
+
+  t.plan(1);
+
+  computationService.kickoff({
+    consortiumId: 'bla bla bla',
+    projectId: 'wat wat wat',
+  })
+    .then(() => t.fail('resolves when consortium lacks active computation ID'))
+    .catch(error => {
+      t.ok(
+        error &amp;&amp; error.message.indexOf('active computation') > -1,
+        'rejects when consortium lacks active computation ID'
+      );
+    });
+});
+
+tape('ComputationService :: kickoff', t => {
+  const params = getStubbedParams();
+
+  const computationService = new ComputationService(params);
+  const consortiumId = 'the-wildest-computation';
+  const project = {
+    name: 'a-project-so-sweet',
+    files: [{
+      filename: 'dope-file',
+    }, {
+      filename: 'baller-file',
+    }, {
+      filename: 'ill-file',
+    }],
+  };
+  const projectId = 'the-craziest-project';
+
+  params.client.consortia.db.get.returns(Promise.resolve({
+    _id: consortiumId,
+    activeComputationId: 'the-most-active-id-evar',
+    label: 'Baller Consortium',
+  }));
+  params.client.projects.db.get.returns(Promise.resolve(project));
+  params.client.pool.triggerRunner.returns(Promise.resolve(
+    'consider-yourself-triggered'
+  ));
+
+  t.plan(7);
+
+  computationService.kickoff({ consortiumId, projectId })
+    .then(response => {
+      t.equal(
+        params.client.consortia.db.get.firstCall.args[0],
+        consortiumId,
+        'retrieves consortium via consortiumId'
+      );
+      t.equal(
+        params.client.projects.db.get.firstCall.args[0],
+        projectId,
+        'retrieves project via projectId'
+      );
+
+
+      const triggerRunnerStub = params.client.pool.triggerRunner;
+      const args = triggerRunnerStub.firstCall.args;
+
+      t.ok(
+        args[0] instanceof RemoteComputationResult,
+        'passes remote computation result'
+      );
+
+      t.ok(
+        args[0].computationId === 'the-most-active-id-evar' &amp;&amp;
+        args[0].consortiumId === consortiumId,
+        'sets computation and consortium IDs on remote computation result'
+      );
+
+      t.ok(args[0]._id, 'sets run ID on remote computation result');
+
+      t.equal(
+        triggerRunnerStub.firstCall.args[1],
+        project,
+        'passes project to pool’s triggerRunner method'
+      );
+      t.equal(
+        response,
+        'consider-yourself-triggered',
+        'passes pool’s triggerRunner’s response'
+      );
+    })
+    .catch(t.end);
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>test/models/pipeline/runner/pool/pipeline-runner-pool.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Base.html">Base</a><ul class='methods'><li data-type='method'><a href="Base.html#serialize">serialize</a></li><li data-type='method'><a href="Base.html#toJSON">toJSON</a></li></ul></li><li><a href="CommandComputation.html">CommandComputation</a><ul class='methods'><li data-type='method'><a href="CommandComputation.html#run">run</a></li><li data-type='method'><a href="CommandComputation.html#serialize">serialize</a></li><li data-type='method'><a href="CommandComputation.html#toJSON">toJSON</a></li></ul></li><li><a href="Computation.html">Computation</a><ul class='methods'><li data-type='method'><a href="Computation.html#.factory">factory</a></li><li data-type='method'><a href="Computation.html#run">run</a></li><li data-type='method'><a href="Computation.html#serialize">serialize</a></li><li data-type='method'><a href="Computation.html#toJSON">toJSON</a></li></ul></li><li><a href="ComputationRegistry.html">ComputationRegistry</a><ul class='methods'><li data-type='method'><a href="ComputationRegistry.html#.getNameAndVersion">getNameAndVersion</a></li><li data-type='method'><a href="ComputationRegistry.html#add">add</a></li><li data-type='method'><a href="ComputationRegistry.html#all">all</a></li><li data-type='method'><a href="ComputationRegistry.html#get">get</a></li><li data-type='method'><a href="ComputationRegistry.html#remove">remove</a></li></ul></li><li><a href="ComputationResult.html">ComputationResult</a><ul class='methods'><li data-type='method'><a href="ComputationResult.html#serialize">serialize</a></li><li data-type='method'><a href="ComputationResult.html#toJSON">toJSON</a></li></ul></li><li><a href="Consortium.html">Consortium</a><ul class='methods'><li data-type='method'><a href="Consortium.html#.compareUsernames">compareUsernames</a></li><li data-type='method'><a href="Consortium.html#hasMember">hasMember</a></li><li data-type='method'><a href="Consortium.html#isOwnedBy">isOwnedBy</a></li><li data-type='method'><a href="Consortium.html#serialize">serialize</a></li><li data-type='method'><a href="Consortium.html#toJSON">toJSON</a></li></ul></li><li><a href="DBListener.html">DBListener</a><ul class='methods'><li data-type='method'><a href="DBListener.html#destroy">destroy</a></li></ul></li><li><a href="DecentralizedComputation.html">DecentralizedComputation</a><ul class='methods'><li data-type='method'><a href="DecentralizedComputation.html#getComputationDocument">getComputationDocument</a></li><li data-type='method'><a href="DecentralizedComputation.html#serialize">serialize</a></li><li data-type='method'><a href="DecentralizedComputation.html#toJSON">toJSON</a></li></ul></li><li><a href="File.html">File</a><ul class='methods'><li data-type='method'><a href="File.html#serialize">serialize</a></li><li data-type='method'><a href="File.html#toJSON">toJSON</a></li></ul></li><li><a href="JavascriptComputation.html">JavascriptComputation</a><ul class='methods'><li data-type='method'><a href="JavascriptComputation.html#run">run</a></li><li data-type='method'><a href="JavascriptComputation.html#serialize">serialize</a></li><li data-type='method'><a href="JavascriptComputation.html#toJSON">toJSON</a></li></ul></li><li><a href="LocalComputationResult.html">LocalComputationResult</a><ul class='methods'><li data-type='method'><a href="LocalComputationResult.html#serialize">serialize</a></li><li data-type='method'><a href="LocalComputationResult.html#toJSON">toJSON</a></li></ul></li><li><a href="LocalPipelineRunner.html">LocalPipelineRunner</a><ul class='methods'><li data-type='method'><a href="LocalPipelineRunner.html#findResultByRunId">findResultByRunId</a></li><li data-type='method'><a href="LocalPipelineRunner.html#getPreviousResultData">getPreviousResultData</a></li><li data-type='method'><a href="LocalPipelineRunner.html#getResultDocs">getResultDocs</a></li><li data-type='method'><a href="LocalPipelineRunner.html#run">run</a></li><li data-type='method'><a href="LocalPipelineRunner.html#saveResult">saveResult</a></li><li data-type='method'><a href="LocalPipelineRunner.html#serialize">serialize</a></li><li data-type='method'><a href="LocalPipelineRunner.html#toJSON">toJSON</a></li></ul></li><li><a href="LocalPipelineRunnerPool.html">LocalPipelineRunnerPool</a><ul class='methods'><li data-type='method'><a href="LocalPipelineRunnerPool.html#createNewRunner">createNewRunner</a></li><li data-type='method'><a href="LocalPipelineRunnerPool.html#destroy">destroy</a></li><li data-type='method'><a href="LocalPipelineRunnerPool.html#getDecentralizedComputation">getDecentralizedComputation</a></li><li data-type='method'><a href="LocalPipelineRunnerPool.html#getLatestResult">getLatestResult</a></li><li data-type='method'><a href="LocalPipelineRunnerPool.html#getLocalResult">getLocalResult</a></li><li data-type='method'><a href="LocalPipelineRunnerPool.html#getPipelinePlugins">getPipelinePlugins</a></li><li data-type='method'><a href="LocalPipelineRunnerPool.html#handleResultChange">handleResultChange</a></li><li data-type='method'><a href="LocalPipelineRunnerPool.html#init">init</a></li><li data-type='method'><a href="LocalPipelineRunnerPool.html#listenToConsortia">listenToConsortia</a></li><li data-type='method'><a href="LocalPipelineRunnerPool.html#serialize">serialize</a></li><li data-type='method'><a href="LocalPipelineRunnerPool.html#toJSON">toJSON</a></li><li data-type='method'><a href="LocalPipelineRunnerPool.html#triggerRunner">triggerRunner</a></li><li data-type='method'><a href="LocalPipelineRunnerPool.html#unlistenToConsortia">unlistenToConsortia</a></li><li data-type='method'><a href="LocalPipelineRunnerPool.html#upsertListener">upsertListener</a></li></ul></li><li><a href="Pipeline.html">Pipeline</a><ul class='methods'><li data-type='method'><a href="Pipeline.html#run">run</a></li><li data-type='method'><a href="Pipeline.html#serialize">serialize</a></li><li data-type='method'><a href="Pipeline.html#toJSON">toJSON</a></li></ul></li><li><a href="PipelineRunner.html">PipelineRunner</a><ul class='methods'><li data-type='method'><a href="PipelineRunner.html#findResultByRunId">findResultByRunId</a></li><li data-type='method'><a href="PipelineRunner.html#getPreviousResultData">getPreviousResultData</a></li><li data-type='method'><a href="PipelineRunner.html#getResultDocs">getResultDocs</a></li><li data-type='method'><a href="PipelineRunner.html#run">run</a></li><li data-type='method'><a href="PipelineRunner.html#saveResult">saveResult</a></li><li data-type='method'><a href="PipelineRunner.html#serialize">serialize</a></li><li data-type='method'><a href="PipelineRunner.html#toJSON">toJSON</a></li></ul></li><li><a href="PipelineRunnerPool.html">PipelineRunnerPool</a><ul class='methods'><li data-type='method'><a href="PipelineRunnerPool.html#createNewRunner">createNewRunner</a></li><li data-type='method'><a href="PipelineRunnerPool.html#destroy">destroy</a></li><li data-type='method'><a href="PipelineRunnerPool.html#getDecentralizedComputation">getDecentralizedComputation</a></li><li data-type='method'><a href="PipelineRunnerPool.html#getPipelinePlugins">getPipelinePlugins</a></li><li data-type='method'><a href="PipelineRunnerPool.html#handleResultChange">handleResultChange</a></li><li data-type='method'><a href="PipelineRunnerPool.html#init">init</a></li><li data-type='method'><a href="PipelineRunnerPool.html#listenToConsortia">listenToConsortia</a></li><li data-type='method'><a href="PipelineRunnerPool.html#serialize">serialize</a></li><li data-type='method'><a href="PipelineRunnerPool.html#toJSON">toJSON</a></li><li data-type='method'><a href="PipelineRunnerPool.html#triggerRunner">triggerRunner</a></li><li data-type='method'><a href="PipelineRunnerPool.html#unlistenToConsortia">unlistenToConsortia</a></li><li data-type='method'><a href="PipelineRunnerPool.html#upsertListener">upsertListener</a></li></ul></li><li><a href="PouchDocument.html">PouchDocument</a><ul class='methods'><li data-type='method'><a href="PouchDocument.html#serialize">serialize</a></li><li data-type='method'><a href="PouchDocument.html#toJSON">toJSON</a></li></ul></li><li><a href="Project.html">Project</a><ul class='methods'><li data-type='method'><a href="Project.html#serialize">serialize</a></li><li data-type='method'><a href="Project.html#toJSON">toJSON</a></li></ul></li><li><a href="RemoteComputationResult.html">RemoteComputationResult</a><ul class='methods'><li data-type='method'><a href="RemoteComputationResult.html#serialize">serialize</a></li><li data-type='method'><a href="RemoteComputationResult.html#toJSON">toJSON</a></li></ul></li><li><a href="RemotePipelineRunner.html">RemotePipelineRunner</a><ul class='methods'><li data-type='method'><a href="RemotePipelineRunner.html#findResultByRunId">findResultByRunId</a></li><li data-type='method'><a href="RemotePipelineRunner.html#getPreviousResultData">getPreviousResultData</a></li><li data-type='method'><a href="RemotePipelineRunner.html#getResultDocs">getResultDocs</a></li><li data-type='method'><a href="RemotePipelineRunner.html#getUserErrors">getUserErrors</a></li><li data-type='method'><a href="RemotePipelineRunner.html#run">run</a></li><li data-type='method'><a href="RemotePipelineRunner.html#saveResult">saveResult</a></li><li data-type='method'><a href="RemotePipelineRunner.html#serialize">serialize</a></li><li data-type='method'><a href="RemotePipelineRunner.html#toJSON">toJSON</a></li></ul></li><li><a href="RemotePipelineRunnerPool.html">RemotePipelineRunnerPool</a><ul class='methods'><li data-type='method'><a href="RemotePipelineRunnerPool.html#buildNewRemoteResult">buildNewRemoteResult</a></li><li data-type='method'><a href="RemotePipelineRunnerPool.html#createNewRunner">createNewRunner</a></li><li data-type='method'><a href="RemotePipelineRunnerPool.html#destroy">destroy</a></li><li data-type='method'><a href="RemotePipelineRunnerPool.html#getDecentralizedComputation">getDecentralizedComputation</a></li><li data-type='method'><a href="RemotePipelineRunnerPool.html#getLatestResult">getLatestResult</a></li><li data-type='method'><a href="RemotePipelineRunnerPool.html#getPipelinePlugins">getPipelinePlugins</a></li><li data-type='method'><a href="RemotePipelineRunnerPool.html#getRemoteResult">getRemoteResult</a></li><li data-type='method'><a href="RemotePipelineRunnerPool.html#handleResultChange">handleResultChange</a></li><li data-type='method'><a href="RemotePipelineRunnerPool.html#init">init</a></li><li data-type='method'><a href="RemotePipelineRunnerPool.html#listenToConsortia">listenToConsortia</a></li><li data-type='method'><a href="RemotePipelineRunnerPool.html#serialize">serialize</a></li><li data-type='method'><a href="RemotePipelineRunnerPool.html#toJSON">toJSON</a></li><li data-type='method'><a href="RemotePipelineRunnerPool.html#triggerRunner">triggerRunner</a></li><li data-type='method'><a href="RemotePipelineRunnerPool.html#unlistenToConsortia">unlistenToConsortia</a></li><li data-type='method'><a href="RemotePipelineRunnerPool.html#upsertListener">upsertListener</a></li></ul></li><li><a href="User.html">User</a><ul class='methods'><li data-type='method'><a href="User.html#serialize">serialize</a></li><li data-type='method'><a href="User.html#toJSON">toJSON</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="module-services_computation-registry-factory.html">services/computation-registry-factory</a><ul class='methods'><li data-type='method'><a href="module-services_computation-registry-factory.html#~computationRegistryFactory">computationRegistryFactory</a></li></ul></li><li><a href="module-services_db-registry.html">services/db-registry</a><ul class='methods'><li data-type='method'><a href="module-services_db-registry.html#~dbRegistryFactory">dbRegistryFactory</a></li></ul></li></ul><h3>Events</h3><ul><li><a href="DBListener.html#event:change">change</a></li><li><a href="DBListener.html#event:delete">delete</a></li><li><a href="LocalPipelineRunner.html#event:noop:noData">noop:noData</a></li><li><a href="LocalPipelineRunner.html#event:noop:noStateChange">noop:noStateChange</a></li><li><a href="LocalPipelineRunnerPool.html#event:computation:complete">computation:complete</a></li><li><a href="LocalPipelineRunnerPool.html#event:ready">ready</a></li><li><a href="LocalPipelineRunnerPool.html#event:listener:created">listener:created</a></li><li><a href="LocalPipelineRunnerPool.html#event:pipeline:inProgress">pipeline:inProgress</a></li><li><a href="LocalPipelineRunnerPool.html#event:queue:end">queue:end</a></li><li><a href="LocalPipelineRunnerPool.html#event:queue:start">queue:start</a></li><li><a href="LocalPipelineRunnerPool.html#event:run:end">run:end</a></li><li><a href="LocalPipelineRunnerPool.html#event:run:start">run:start</a></li><li><a href="Pipeline.html#event:save-request">save-request</a></li><li><a href="PipelineRunner.html#event:noop:noData">noop:noData</a></li><li><a href="PipelineRunner.html#event:noop:noStateChange">noop:noStateChange</a></li><li><a href="PipelineRunnerPool.html#event:computation:complete">computation:complete</a></li><li><a href="PipelineRunnerPool.html#event:ready">ready</a></li><li><a href="PipelineRunnerPool.html#event:listener:created">listener:created</a></li><li><a href="PipelineRunnerPool.html#event:pipeline:inProgress">pipeline:inProgress</a></li><li><a href="PipelineRunnerPool.html#event:queue:end">queue:end</a></li><li><a href="PipelineRunnerPool.html#event:queue:start">queue:start</a></li><li><a href="PipelineRunnerPool.html#event:run:end">run:end</a></li><li><a href="PipelineRunnerPool.html#event:run:start">run:start</a></li><li><a href="RemotePipelineRunner.html#event:noop:noData">noop:noData</a></li><li><a href="RemotePipelineRunner.html#event:noop:noStateChange">noop:noStateChange</a></li><li><a href="RemotePipelineRunnerPool.html#event:computation:complete">computation:complete</a></li><li><a href="RemotePipelineRunnerPool.html#event:ready">ready</a></li><li><a href="RemotePipelineRunnerPool.html#event:listener:created">listener:created</a></li><li><a href="RemotePipelineRunnerPool.html#event:pipeline:inProgress">pipeline:inProgress</a></li><li><a href="RemotePipelineRunnerPool.html#event:queue:end">queue:end</a></li><li><a href="RemotePipelineRunnerPool.html#event:queue:start">queue:start</a></li><li><a href="RemotePipelineRunnerPool.html#event:run:end">run:end</a></li><li><a href="RemotePipelineRunnerPool.html#event:run:start">run:start</a></li></ul><h3>Global</h3><ul><li><a href="global.html#cleanupTestDir">cleanupTestDir</a></li><li><a href="global.html#filterComputation">filterComputation</a></li><li><a href="global.html#getMockComputations">getMockComputations</a></li><li><a href="global.html#localResultOpts">localResultOpts</a></li><li><a href="global.html#MOCK_COMPUTATION_PATH">MOCK_COMPUTATION_PATH</a></li><li><a href="global.html#remoteResultOpts">remoteResultOpts</a></li><li><a href="global.html#seedInstanceComputations">seedInstanceComputations</a></li><li><a href="global.html#setupNetworkStubs">setupNetworkStubs</a></li><li><a href="global.html#setupTestDir">setupTestDir</a></li><li><a href="global.html#TEST_COMPUTATION_PATH">TEST_COMPUTATION_PATH</a></li><li><a href="global.html#urlToString">urlToString</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">test/models/pipeline/runner/pool/pipeline-runner-pool.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+
+/**
+ * @NOTE because tape exits tests _early_, after teardown it's imperative to add
+ * an extra assertion to make sure things toredown correctly.  that is, teardown
+ * MUST be assert if it's async.
+ */
+require('../../../../helpers/boot');
+const test = require('tape');
+const poolUtils = require('./.test-pool-utils');
+const EventEmitter = require('events').EventEmitter;
+const common = require('../../../../../');
+const computation = common.models.computation;
+const Consortium = common.models.Consortium;
+const Pouchy = require('pouchy');
+const PipelineRunnerPool = common.models.pipeline.runner.pool.PipelineRunnerPool;
+const ComputationResult = computation.ComputationResult;
+const LocalComputationResult = computation.LocalComputationResult;
+const RemoteComputationResult = computation.RemoteComputationResult;
+const LocalPipelineRunner = common.models.pipeline.runner.LocalPipelineRunner;
+const pipelines = require('../../.test-pipelines');
+const assign = require('lodash/assign');
+
+/**
+ * @function remoteResultOpts
+ * @description get a functional set of constructor opts for LocalComputationResult
+ */
+const remoteResultOpts = (opts) => {
+  return assign({
+    _id: 'runId',
+    usernames: ['testUser'],
+    consortiumId: 'test-consortium',
+    computationId: 'testcomputation-testversion',
+  }, opts);
+};
+
+/**
+ * @function localResultOpts
+ * @description get a functional set of constructor opts for LocalComputationResult
+ */
+const localResultOpts = (opts) => {
+  return assign({
+    _id: 'runId-userName',
+    consortiumId: 'test-consortium',
+    computationId: 'testcomputation-testversion',
+    username: 'testUser',
+    userData: { kickoff: true },
+  }, opts);
+};
+
+const setupServer = () => poolUtils.setup();
+const teardownServer = () => poolUtils.teardown();
+
+
+test('PipelineRunnerPool - handles new dbs', function (t) {
+  // @TODO handle https://github.com/pouchdb/pouchdb/issues/4922
+  t.plan(3);
+  setupServer().then(() => {
+    const poolOpts = poolUtils.getPoolOpts({ dbRegistry: { isRemote: true } });
+    t.throws(
+      PipelineRunnerPool.prototype._handleCreatedDB,
+      'abstract unextended handleCreatedDB throws'
+    );
+    let pool = new PipelineRunnerPool(poolOpts);
+    pool._handleCreatedDB = function (dbName) {
+          // see above issue for early return justification
+      if (this.createdHandlerCalled) { return; }
+      this.createdHandlerCalled = true;
+      t.ok(dbName, 'created db handler called');
+      pool.destroy()
+      .then(() => teardownServer())
+      .then(() => t.pass('teardown ok'))
+      .then(t.end, t.end);
+    };
+    pool.init().catch(t.end);
+  });
+});
+
+test('queues processing for rapid succession database events', t => {
+  t.plan(3);
+  setupServer().then(() => {
+    const runId = 'testrun123';
+    const resultOpts = localResultOpts({ _id: runId + '-bilboBaggins' });
+    let localResult1 = new LocalComputationResult(resultOpts);
+    let localResult2 = new LocalComputationResult(resultOpts);
+    const tDB = new Pouchy({ name: 'queue-db', pouchConfig: { adapter: 'memory' } });
+    const runner = new LocalPipelineRunner({
+      pipeline: pipelines.userTriggeredStepping(), // generic _async_ js pipeline
+      result: localResult1,
+      db: tDB,
+    });
+    let pool = new PipelineRunnerPool(poolUtils.getPoolOpts({ dbRegistry: { isLocal: true } }));
+    poolUtils.suppressCreateDestroyHandlers(pool);
+    pool.runners[runId] = runner; // stub in the pipeline-runner
+
+    const origRunnerRun = runner.run;
+    let callCount = 0;
+    runner.run = (opts) => {
+      ++callCount;
+      if (callCount === 1) {
+        t.equal(
+          pool.runQueueSize[runId],
+          1,
+          'exactly one job actively running, after runner.run called once'
+        );
+      } else if (callCount === 2) {
+        t.equal(
+          pool.runQueueSize[runId],
+          0,
+          'exactly zero jobs actively running, after runner.run called twice'
+        );
+      }
+      return origRunnerRun.call(runner, opts);
+    };
+
+    // manually `triggerRunner`, whereas db events generally exec this
+    // behavior
+    pool.init()
+    .then(() => {
+      pool.triggerRunner(localResult1); // fire the requests ~concurrently
+      return pool.triggerRunner(localResult2);
+    })
+    .then(() => pool.destroy())
+    .then(() => teardownServer())
+    .then(() => t.pass('teardown ok'))
+    .then(() => t.end(), t.end);
+  });
+});
+
+test('does not proceed queue whilst pipeline is `inProgress`', t => {
+  t.plan(5);
+  setupServer().then(() => {
+    let localResult = new LocalComputationResult(localResultOpts());
+    let remoteResult1 = new RemoteComputationResult(remoteResultOpts());
+    let remoteResult2 = new RemoteComputationResult(remoteResultOpts());
+    let remoteResult3 = new RemoteComputationResult(remoteResultOpts());
+    const runner = new LocalPipelineRunner({
+      pipeline: pipelines.basicMultiAsyncStep(), // steps sync, then async
+      result: localResult,
+      db: new Pouchy({ name: 'queue-db', pouchConfig: { adapter: 'memory' } }),
+    });
+    let pool = new PipelineRunnerPool(poolUtils.getPoolOpts({ dbRegistry: { isLocal: true } }));
+    poolUtils.suppressCreateDestroyHandlers(pool);
+    pool.runners[localResult.runId] = runner; // stub in the runner
+    const getQueLen = () => pool.runQueueSize[localResult.runId];
+    let requestComplete = 0;
+
+    // pipeline is 3 runs long, thus, inProgress for 2 of the events
+    // this is _confusing_ and should be tidied. you are forewarned!
+    // it would make _more_ sense to listen to `runner.events.on('halt')` to
+    // detect when the runner completes requests, but that event is _not_
+    // bubbled out.  `run:end` serves the same purpose.
+    pool.events.on('run:end', () => {
+      ++requestComplete;
+      const queueLen = getQueLen();
+      if (requestComplete === 1) {
+        return t.equal(queueLen, 2, 'two jobs queued');
+      } else if (requestComplete === 2) {
+        return t.equal(queueLen, 1, 'one jobs queued');
+      } else if (requestComplete === 3) {
+        return t.equal(queueLen, 0, 'zero jobs queued');
+      }
+      return t.fail('bogu run:end occurred');
+    });
+    pool.events.on('queue:end', () => {
+      pool.destroy()
+      .then(() => teardownServer())
+      .then(() => {
+        t.equal(requestComplete, 3, 'three jobs run');
+        t.end();
+      }, t.end);
+    });
+
+    // go.
+    pool.init()
+    .then(() => {
+      pool.triggerRunner(remoteResult1);
+      pool.triggerRunner(remoteResult2);
+      pool.triggerRunner(remoteResult3);
+      t.equal(getQueLen(), 3, 'three jobs queued');
+    });
+  });
+});
+
+test('Pool emits queue and run event activity', t => {
+  t.plan(8);
+  setupServer().then(() => {
+    const runId = 'test_run_db_triggers_run';
+    const compSeed1 = { _id: runId + '-testuser1', username: 'testuser1' };
+    const compSeed2 = { _id: runId + '-testuser2', username: 'testuser2' };
+    let localResult1 = new LocalComputationResult(localResultOpts(compSeed1));
+    let localResult2 = new LocalComputationResult(localResultOpts(compSeed2));
+    const runner = new LocalPipelineRunner({
+      pipeline: pipelines.basic(),
+      result: localResult1,
+      db: new Pouchy({ name: 'testeventsdb', pouchConfig: { adapter: 'memory' } }),
+    });
+    let pool = new PipelineRunnerPool(poolUtils.getPoolOpts({ dbRegistry: { isLocal: true } }));
+    poolUtils.suppressCreateDestroyHandlers(pool);
+    pool.runners[runId] = runner; // stub in the runner
+    const confirmStartRunEvents = (result) => {
+      if (result === localResult1) { return t.pass('result1 evented'); }
+      if (result === localResult2) { return t.pass('result2 evented'); }
+      return t.end('bogus event content detected');
+    };
+    const confirmEndRunEvents = (result) => {
+      if (
+        result.username === localResult1.username ||
+        result.username === localResult2.username
+      ) {
+        return t.ok(result instanceof ComputationResult, 'ComputationResult emitted');
+      }
+      return t.end('bogus event content detected');
+    };
+    pool.events.on('run:start', confirmStartRunEvents);
+    pool.events.on('run:end', confirmEndRunEvents);
+    pool.events.on('queue:start', qRunId => t.equal(qRunId, runId, 'queue on starts'));
+    pool.events.on('queue:end', qRunId => {
+      t.equal(qRunId, runId, 'queue on ends');
+      pool.destroy()
+      .then(() => teardownServer())
+      .then(() => t.pass('pool teardown ok'))
+      .then(t.end, t.end);
+    });
+    t.throws(
+      () => pool.handleResultChange(),
+      /ReferenceError/,
+      'ComputationResult instance required'
+    );
+    pool.init()
+    .then(() => {
+      pool.handleResultChange(localResult1);
+      pool.handleResultChange(localResult2);
+    })
+    .catch(t.err);
+  });
+});
+
+test('abstract methods', (t) => {
+  t.plan(1);
+  let pool = new PipelineRunnerPool(poolUtils.getPoolOpts({ dbRegistry: { isLocal: true } }));
+  pool.createNewRunner(null)
+  .catch((err) => t.ok(err.message.match(/abstract/), 'illegal createNewRunner call'))
+  .then(t.end, t.end);
+});
+
+test('consortia has DBListeners on pool.init()', t => {
+  t.plan(2);
+  setupServer().then(() => {
+    /**
+     * add a consortium
+     * when the pool inits, it will try to initialize listeners
+     * on the consortium because we will set `listenToRemote = true`
+     * assert listeners generated per expectation
+     */
+    let pool;
+    const testId = 'testid';
+    const dbRegistry = poolUtils.getDBRegistry();
+    const dummyConsortium = new Consortium({
+      _id: `${testId}`,
+      description: 'test-consortium',
+      label: 'test-consortium',
+      users: [],
+      owners: [],
+    });
+    dbRegistry.get('consortia')
+    .save(dummyConsortium.serialize())
+    .then(() => {
+      pool = new PipelineRunnerPool(poolUtils.getPoolOpts({ dbRegistry: { isLocal: true } }));
+      pool.dbRegistry = dbRegistry; // swap seeded registry
+      poolUtils.suppressCreateDestroyHandlers(pool);
+      pool.listenToRemote = true;
+      return pool.init();
+    })
+    .then(() => {
+      const cachedListener = pool.resultsListeners[`remote-consortium-${testId}`];
+      t.ok(cachedListener instanceof EventEmitter, 'listener ok');
+    })
+    .then(() => pool.destroy())
+    .then(() => teardownServer())
+    .then(() => t.pass('pool teardown ok'))
+    .then(t.end, t.end);
+  });
+});
+
+test('pool selectively listens to consortia when using `listenTo`', (t) => {
+  /**
+   * add a consortium
+   * when the pool inits, it will try to initialize listeners
+   * on the consortium because we will set `listenToRemote = true`
+   * assert that listeners generated per expectation
+   */
+  t.plan(4);
+  setupServer().then(() => {
+    let pool;
+    const testId1 = 'testid';
+    const testId2 = 'testdontlisten';
+    const dbRegistry = poolUtils.getDBRegistry();
+    const con1 = new Consortium({
+      _id: `${testId1}`,
+      description: 'test-consortium',
+      label: 'test-consortium',
+      users: [],
+      owners: [],
+    });
+    const con2 = new Consortium({
+      _id: `${testId2}`,
+      description: 'test-consortium',
+      label: 'test-consortium',
+      users: [],
+      owners: [],
+    });
+    const selectiveListenerPoolOpts = poolUtils.getPoolOpts({ dbRegistry: { isLocal: true } });
+    selectiveListenerPoolOpts.listenTo = [testId1];
+    dbRegistry.get('consortia')
+    .save(con1.serialize())
+    .then(() => {
+      pool = new PipelineRunnerPool(selectiveListenerPoolOpts);
+      pool.dbRegistry = dbRegistry; // swap seeded registry
+      poolUtils.suppressCreateDestroyHandlers(pool);
+      pool.listenToRemote = true;
+      return pool.init();
+    })
+    .then(() => {
+      t.ok(
+        pool.resultsListeners[`remote-consortium-${testId1}`],
+        'listener created on limited listen set'
+      );
+      t.equals(
+        pool._shouldListenToConsortium(con1),
+        true,
+        'should listen to listenTo consortium'
+      );
+      t.equals(
+        pool._shouldListenToConsortium(con2),
+        false,
+        'should not listen to non-listenTo consortium'
+      );
+    })
+    .then(() => pool.destroy())
+    .then(() => teardownServer())
+    .then(() => t.pass('pool teardown ok'))
+    .then(t.end, t.end);
+  });
+});
+
+test('getPipelinePlugins', (t) => {
+  const poolOpts = poolUtils.getPoolOpts({ dbRegistry: { isLocal: true } });
+  const pool = new PipelineRunnerPool(poolOpts);
+  const hooks = pool.getPipelinePlugins({
+    comp: { plugins: ['group-step'] },
+    env: 'local',
+  });
+  t.ok(hooks.preRun.length, 'group-step preRun loaded');
+  t.equals(hooks.postRun.length, 0, 'no group-step postRun loaded, but [] present');
+  t.end();
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

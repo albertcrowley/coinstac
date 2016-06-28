@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/index.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-server.html">server</a><ul class='methods'><li data-type='method'><a href="module-server.html#.start">start</a></li><li data-type='method'><a href="module-server.html#.stop">stop</a></li></ul></li><li><a href="module-service_computation-registry.html">service/computation-registry</a><ul class='methods'><li data-type='method'><a href="module-service_computation-registry.html#.get">get</a></li><li data-type='method'><a href="module-service_computation-registry.html#.getComputationsPath">getComputationsPath</a></li><li data-type='method'><a href="module-service_computation-registry.html#.init">init</a></li><li data-type='method'><a href="module-service_computation-registry.html#.teardown">teardown</a></li><li data-type='method'><a href="module-service_computation-registry.html#.upsertComputationsDir">upsertComputationsDir</a></li></ul></li><li><a href="module-service_computations-database-syncer.html">service/computations-database-syncer</a><ul class='methods'><li data-type='method'><a href="module-service_computations-database-syncer.html#~getComputationFinder">getComputationFinder</a></li><li data-type='method'><a href="module-service_computations-database-syncer.html#~sync">sync</a></li></ul></li><li><a href="module-service_db-registry.html">service/db-registry</a><ul class='methods'><li data-type='method'><a href="module-service_db-registry.html#.get">get</a></li><li data-type='method'><a href="module-service_db-registry.html#.getDBPath">getDBPath</a></li><li data-type='method'><a href="module-service_db-registry.html#.init">init</a></li><li data-type='method'><a href="module-service_db-registry.html#.teardown">teardown</a></li><li data-type='method'><a href="module-service_db-registry.html#.upsertDBDir">upsertDBDir</a></li></ul></li><li><a href="module-service_logger.html">service/logger</a></li><li><a href="module-service_remote-pipeline-runner-pool.html">service/remote-pipeline-runner-pool</a><ul class='methods'><li data-type='method'><a href="module-service_remote-pipeline-runner-pool.html#.init">init</a></li><li data-type='method'><a href="module-service_remote-pipeline-runner-pool.html#.teardown">teardown</a></li></ul></li><li><a href="module-service_seed-consortia.html">service/seed-consortia</a></li></ul><h3>Global</h3><ul><li><a href="global.html#failStderr">failStderr</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">src/index.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+
+/**
+ * @module server
+ */
+const computationRegistryService = require('./services/computation-registry');
+const computationsSyncer = require('./services/computations-database-syncer');
+const dbRegistryService = require('./services/db-registry');
+const remotePRPService = require('./services/remote-prp');
+const seedConsortia = require('./services/seed-consortia');
+
+module.exports = {
+
+  /**
+   * exposes primary server components
+   * @private
+   * @returns {undefined}
+   */
+  exposeInternals() {
+    this.computationRegistry = computationRegistryService.get();
+    this.dbRegistry = dbRegistryService.get();
+    this.pool = remotePRPService.pool;
+  },
+
+  /**
+   *
+   * Set up registries, initializers and listeners.
+   *
+   * @param {object} [config={}]
+   * @param {(string|object[])} [config.seed] Whether or not to seed the database.
+   * This only seeds if no documents exist in the `consortia` database. Pass
+   * JSON as a string or a collection of document objects.
+   * @param {string} [config.dbUrl] Database URL.
+   * @param {boolean} [config.inMemory=false] Use an in-memory database using
+   * instead of writing to disk.
+   * @returns {Promise}
+   */
+  start(config) {
+    /* istanbul ignore if */
+    if (typeof config === 'undefined') {
+      config = {}; // eslint-disable-line no-param-reassign
+    }
+
+    // init.
+    // do all seed ops after pool init s.t. dbs are-likely-synced across the network
+    return dbRegistryService.init(config)
+      .then(() => computationRegistryService.init())
+      .then(() => seedConsortia(config))
+      .then(() => computationsSyncer.sync())
+      .then(() => remotePRPService.init())
+      .then(() => this.exposeInternals())
+      .then(() => this.pool);
+  },
+
+  /**
+   * stop the server. teardown internal services.
+   * @returns {Promise}
+   */
+  stop() {
+    computationRegistryService.teardown();
+    dbRegistryService.teardown();
+    return remotePRPService.teardown();
+  },
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

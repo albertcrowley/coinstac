@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/index.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Auth.html">Auth</a><ul class='methods'><li data-type='method'><a href="Auth.html#createUser">createUser</a></li><li data-type='method'><a href="Auth.html#getUser">getUser</a></li><li data-type='method'><a href="Auth.html#login">login</a></li><li data-type='method'><a href="Auth.html#logout">logout</a></li><li data-type='method'><a href="Auth.html#setUser">setUser</a></li></ul></li><li><a href="CoinstacClient.html">CoinstacClient</a><ul class='methods'><li data-type='method'><a href="CoinstacClient.html#_initAuthorization">_initAuthorization</a></li><li data-type='method'><a href="CoinstacClient.html#_initSubAPIs">_initSubAPIs</a></li><li data-type='method'><a href="CoinstacClient.html#initialize">initialize</a></li><li data-type='method'><a href="CoinstacClient.html#teardown">teardown</a></li></ul></li><li><a href="ModelService.html">ModelService</a><ul class='methods'><li data-type='method'><a href="ModelService.html#all">all</a></li><li data-type='method'><a href="ModelService.html#delete">delete</a></li><li data-type='method'><a href="ModelService.html#get">get</a></li><li data-type='method'><a href="ModelService.html#getBy">getBy</a></li><li data-type='method'><a href="ModelService.html#modelServiceHooks">modelServiceHooks</a></li><li data-type='method'><a href="ModelService.html#save">save</a></li><li data-type='method'><a href="ModelService.html#validate">validate</a></li></ul></li><li><a href="module-computation-service-ComputationService.html">ComputationService</a><ul class='methods'><li data-type='method'><a href="module-computation-service-ComputationService.html#all">all</a></li><li data-type='method'><a href="module-computation-service-ComputationService.html#delete">delete</a></li><li data-type='method'><a href="module-computation-service-ComputationService.html#get">get</a></li><li data-type='method'><a href="module-computation-service-ComputationService.html#getBy">getBy</a></li><li data-type='method'><a href="module-computation-service-ComputationService.html#kickoff">kickoff</a></li><li data-type='method'><a href="module-computation-service-ComputationService.html#modelServiceHooks">modelServiceHooks</a></li><li data-type='method'><a href="module-computation-service-ComputationService.html#save">save</a></li><li data-type='method'><a href="module-computation-service-ComputationService.html#validate">validate</a></li></ul></li><li><a href="module-project-service-ProjectService.html">ProjectService</a><ul class='methods'><li data-type='method'><a href="module-project-service-ProjectService.html#addFiles">addFiles</a></li><li data-type='method'><a href="module-project-service-ProjectService.html#all">all</a></li><li data-type='method'><a href="module-project-service-ProjectService.html#delete">delete</a></li><li data-type='method'><a href="module-project-service-ProjectService.html#get">get</a></li><li data-type='method'><a href="module-project-service-ProjectService.html#getBy">getBy</a></li><li data-type='method'><a href="module-project-service-ProjectService.html#getFileStats">getFileStats</a></li><li data-type='method'><a href="module-project-service-ProjectService.html#modelServiceHooks">modelServiceHooks</a></li><li data-type='method'><a href="module-project-service-ProjectService.html#removeFiles">removeFiles</a></li><li data-type='method'><a href="module-project-service-ProjectService.html#save">save</a></li><li data-type='method'><a href="module-project-service-ProjectService.html#validate">validate</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="Common%2520access%2520point%2520for%2520the%2520test%2520directory.%2520This%2520should%2520be%2520used%2520by%2520all%250Athings%2520writing%2520to%2520disc%2520during%2520test%2520runs.module_.html">Common access point for the test directory. This should be used by all
+things writing to disc during test runs.</a></li><li><a href="module-applicationDirectory.html">applicationDirectory</a></li><li><a href="module-computation-service.html">computation-service</a></li><li><a href="module-consortia-service.html">consortia-service</a></li><li><a href="module-project-files.html">project-files</a><ul class='methods'><li data-type='method'><a href="module-project-files.html#.prepare">prepare</a></li></ul></li><li><a href="module-project-service.html">project-service</a></li><li><a href="module-teardown-auth.html">teardown-auth</a><ul class='methods'><li data-type='method'><a href="module-teardown-auth.html#.teardownAuth">teardownAuth</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#getStubbedParams">getStubbedParams</a></li><li><a href="global.html#initializeAPIClient">initializeAPIClient</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">src/index.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+
+// app package deps
+const mkdirp = require('mkdirp');
+const bluebird = require('bluebird');
+bluebird.config({ warnings: false });
+const path = require('path');
+const winston = require('winston');
+const Logger = winston.Logger;
+const Console = winston.transports.Console;
+const hawkifyPouchDB = require('hawkify-pouchdb');
+
+// app utils
+const common = require('coinstac-common');
+const LocalPipelineRunnerPool = common.models.pipeline.runner.pool.LocalPipelineRunnerPool;
+const appDirectory = require('./utils/app-directory');
+const computationRegistryFactory = common.services.computationRegistry;
+const registryFactory = require('coinstac-common').services.dbRegistry;
+
+// init &amp; teardown
+const initializeAPIClient = require('./init/halfpenny');
+const teardownAuth = require('./teardown/auth');
+
+// client sub-apis
+// const project = require('./sub-api/project');
+const Auth = require('./sub-api/auth');
+const ConsortiaService = require('./sub-api/consortia-service');
+const ComputationService = require('./sub-api/computation-service');
+const ProjectServices = require('./sub-api/project-service');
+
+
+/**
+ * Create a user client for COINSTAC
+ * @example &lt;caption>construction and initialization&lt;/caption>
+ * const client = new CoinstacClient();
+ * client.initialize((err) => {
+ *   if (err) { throw err; }
+ *   client.logger.info('Success! I’ve initialized!');
+ * });
+ *
+ * @class
+ * @constructor
+ * @param {object} opts
+ * @property {string} [opts.appDirectory] Path to on-disk storage. Primarily
+ * used for testing.
+ * @param {Winston} [opts.logger] permit user injected logger vs default logger
+ * @param {string} [opts.logLevel] npm log levels, e.g. 'verbose', 'error', etc
+ * @param {object} [opts.db] coinstac-common dbRegistry service configuration
+ * @param {LocalStorage} [opts.storage] storage engine for halfpenny
+ * @property {LocalStorage} storage
+ * @property {Halfpenny} apiClient
+ * @property {DBRegistry} dbRegistry
+ * @property {object} dbConfig db registry configuration stashed for late initialization
+ * @property {Winston} logger
+ * @property {string} appDirectory
+ * @property {Auth} auth
+ * @property {Project} project
+ */
+class CoinstacClient {
+  constructor(opts) {
+    if (!opts || !(opts instanceof Object)) {
+      throw new TypeError('coinstac-client requires configuration opts');
+    }
+    this.dbConfig = opts.db;
+    this.storage = opts.storage;
+    this.appDirectory = opts.appDirectory || appDirectory;
+    this.halfpennyDirectory = path.join(this.appDirectory, '.halfpenny');
+    this.logger = opts.logger || new Logger({ transports: [new Console()] });
+
+    // hack for electron-remote. generate full API, even if it's dead.
+    this.auth = {};
+    this.consortia = {};
+    this.computations = {};
+    this.dbRegistry = {};
+    this.halfpenny = {};
+    this.projects = {};
+
+    /* istanbul ignore if */
+    if (opts.logLevel) {
+      this.logger.level = opts.logLevel;
+    }
+  }
+
+  /**
+   * Initialize.
+   *
+   * Start up coinstac-client-core. Initialization consists of:
+   *
+   *   * instantiating an API client instance
+   *   * applying security headers to our PouchDB stores
+   *
+   * @param {Object} credentials
+   * @param {string} credentials.password
+   * @param {string} credentials.username
+   * @param {string} [credentials.email]
+   * @param {string} [credentials.name]
+   * @param {Promise}
+   */
+  initialize(credentials) {
+    if (!(this instanceof CoinstacClient)) {
+      return Promise.reject(
+        new TypeError('expected `this` to be CoinstacClient instance')
+      );
+    } else if (
+      typeof credentials === 'undefined' || !(credentials instanceof Object)
+    ) {
+      return Promise.reject(
+        new TypeError('Expected credentials object')
+      );
+    } else if (!credentials.password || !credentials.username) {
+      return Promise.reject(
+          new TypeError('Expected credentials to contain a username and password')
+      );
+    }
+    this.logger.info('initializing coinstac-client');
+
+    return Promise.resolve(bluebird.promisify(mkdirp)(this.halfpennyDirectory))
+      .then(() => {
+        const hpOpts = { storagePath: this.halfpennyDirectory };
+
+        /* istanbul ignore else */
+        if (this.storage) {
+          hpOpts.storage = this.storage;
+        }
+
+        this.halfpenny = initializeAPIClient(hpOpts);
+        this.auth = new Auth({
+          halfpenny: this.halfpenny,
+        });
+
+        return this._initAuthorization(credentials);
+      })
+      .then(() => this._initDBRegistry())
+      .then(() => this._initSubAPIs())
+      .then(() => this._initComputationRegistry())
+      .then(() => this._initPool())
+      .then(() => this.auth.getUser().serialize());
+  }
+
+  /**
+   * Examine the shape of `credentials` to determine whether to log in
+   * or create a new user.
+   * @param {object} credentials @see `initialize`
+   * @returns {Promise}
+   */
+  _initAuthorization(credentials) {
+    if (credentials.email &amp;&amp; credentials.name) {
+      return this.auth.createUser(credentials);
+    }
+    return this.auth.login(credentials);
+  }
+
+  /**
+   * initialize the user's ComputationRegistry
+   * @private
+   * @returns {Promise}
+   */
+  _initComputationRegistry() {
+    const computationsDirectory = path.join(this.appDirectory, 'computations');
+
+    this.logger.info('initializing ComputationRegistry');
+
+    return bluebird.promisify(mkdirp)(computationsDirectory)
+      .then(() => computationRegistryFactory({
+        isLocal: true,
+        dbRegistry: this.dbRegistry,
+        path: computationsDirectory,
+      }))
+      .then((reg) => { this.computationRegistry = reg; });
+  }
+
+
+  _initDBRegistry() {
+    const defaults = {
+      isLocal: true,
+      path: appDirectory,
+      remote: {
+        db: {
+          protocol: 'https',
+          hostname: 'prodapicoin.mrn.org',
+          port: 5984,
+          pathname: 'coinstacdb',
+        },
+      },
+    };
+    /* istanbul ignore next */
+    const pouchAjax = function stubPouchDBAjax() {};
+    // @TODO ^ replace with require('pouch-ajax') when pouchdb#5322 is closed
+    // and hawkify-pouchdb actually wraps the pouchAjax function successfully!
+    // for now, hawkify-pouchdb simply returns an object with the proper headers.
+    // all dbs will have the returned ajax headers applied.
+    const ajax = {
+      ajax: function applyHawkAjaxHeaders() {
+        return hawkifyPouchDB(pouchAjax, this.halfpenny.auth.getAuthCredentials());
+      }.bind(this),
+    };
+    const regOpts = Object.assign(defaults, this.dbConfig, ajax);
+    this.dbRegistry = registryFactory(regOpts);
+    return this.dbRegistry;
+  }
+
+  /**
+   * initialize the user's LocalPipelineRunnerPool
+   * @private
+   * @returns {Promise}
+   */
+  _initPool() {
+    this.logger.info('construct LocalPipelineRunnerPool');
+    const user = this.auth.getUser();
+    return this.consortia.getUserConsortia(user.username)
+    .then((tia) => {
+      const tiaIds = tia.map((tium) => tium._id);
+      this.logger.info(`user belongs to consortia: ${tiaIds.join(', ')}`);
+      this.pool = new LocalPipelineRunnerPool({
+        listenTo: tiaIds,
+        computationRegistry: this.computationRegistry,
+        dbRegistry: this.dbRegistry,
+        user,
+      });
+
+      this.pool.events.on('computation:complete', runId => {
+        this.logger.verbose(
+          'LocalPipelineRunnerPool.events [computation:complete]', 'Run id: %s', runId
+        );
+      });
+      this.pool.events.on('ready', () => {
+        this.logger.verbose('LocalPipelineRunnerPool.events [ready]');
+      });
+      this.pool.events.on('listener:created', dbName => {
+        this.logger.verbose(
+          'LocalPipelineRunnerPool.events [listener:created]', 'DB name: %s', dbName
+        );
+      });
+      this.pool.events.on('queue:start', runId => {
+        this.logger.verbose(
+          'LocalPipelineRunnerPool.events [queue:start]', 'Run id: %s', runId
+        );
+      });
+      this.pool.events.on('queue:end', runId => {
+        this.logger.verbose(
+          'LocalPipelineRunnerPool.events [queue:end]', 'Run id: %s', runId
+        );
+      });
+      this.pool.events.on('pipeline:inProgress', () => {
+        this.logger.verbose('LocalPipelineRunnerPool.events [pipeline:inProgress]');
+      });
+      this.pool.events.on('run:end', compResult => {
+        this.logger.verbose(
+          'LocalPipelineRunnerPool.events [run:end]', 'Computation result:', compResult
+        );
+      });
+      this.pool.events.on('computation:complete', runId => {
+        this.logger.verbose(
+          'LocalPipelineRunnerPool.events [computation:complete]', 'Run id: %s', runId
+        );
+      });
+      this.pool.events.on('run:start', result => {
+        this.logger.verbose(
+          'LocalPipelineRunnerPool.events [run:start]', 'Result:', result
+        );
+      });
+
+      this.logger.info('initializing LocalPipelineRunnerPool');
+    })
+    .then(() => this.pool.init())
+    .then(() => {
+      this.pool.consortiaListener.on('delete', event => {
+        this.logger.verbose(
+          'LocalPipelineRunnerPool.consortiaListener [delete]',
+          'Name: %s', event.name,
+          'Document:', event.doc
+        );
+      });
+      this.pool.consortiaListener.on('change', event => {
+        this.logger.verbose(
+          'LocalPipelineRunnerPool.consortiaListener [change]',
+          'Name: %s', event.name,
+          'Document:', event.doc
+        );
+      });
+    });
+  }
+
+  /**
+   * Append sub-apis to client instance.
+   * @returns {undefined}
+   */
+  _initSubAPIs() {
+    const subAPIConf = {
+      client: this,
+      dbRegistry: this.dbRegistry,
+    };
+
+    // init sub-api services
+    this.consortia = new ConsortiaService(subAPIConf);
+    this.computations = new ComputationService(subAPIConf);
+    this.projects = new ProjectServices(subAPIConf);
+  }
+
+  /**
+   * Inverse of .initialize.  Clears all authorization content, clears the
+   * db registry (content remains intact), and purges the API client instance
+   * @returns {undefined}
+   */
+  teardown() {
+    // Repeated so Sinon can spy:
+    return teardownAuth.teardownAuth(this)
+    .then(() => (this.pool ? this.pool.destroy() : this.dbRegistry.destroy()))
+    .then(() => {
+      delete this.halfpenny;
+      delete this.auth;
+      delete this.consortia;
+      delete this.computations;
+      delete this.projects;
+      return null;
+    });
+  }
+}
+
+module.exports = CoinstacClient;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

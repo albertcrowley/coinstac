@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/services/computation-registry.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-server.html">server</a><ul class='methods'><li data-type='method'><a href="module-server.html#.start">start</a></li><li data-type='method'><a href="module-server.html#.stop">stop</a></li></ul></li><li><a href="module-service_computation-registry.html">service/computation-registry</a><ul class='methods'><li data-type='method'><a href="module-service_computation-registry.html#.get">get</a></li><li data-type='method'><a href="module-service_computation-registry.html#.getComputationsPath">getComputationsPath</a></li><li data-type='method'><a href="module-service_computation-registry.html#.init">init</a></li><li data-type='method'><a href="module-service_computation-registry.html#.teardown">teardown</a></li><li data-type='method'><a href="module-service_computation-registry.html#.upsertComputationsDir">upsertComputationsDir</a></li></ul></li><li><a href="module-service_computations-database-syncer.html">service/computations-database-syncer</a><ul class='methods'><li data-type='method'><a href="module-service_computations-database-syncer.html#~getComputationFinder">getComputationFinder</a></li><li data-type='method'><a href="module-service_computations-database-syncer.html#~sync">sync</a></li></ul></li><li><a href="module-service_db-registry.html">service/db-registry</a><ul class='methods'><li data-type='method'><a href="module-service_db-registry.html#.get">get</a></li><li data-type='method'><a href="module-service_db-registry.html#.getDBPath">getDBPath</a></li><li data-type='method'><a href="module-service_db-registry.html#.init">init</a></li><li data-type='method'><a href="module-service_db-registry.html#.teardown">teardown</a></li><li data-type='method'><a href="module-service_db-registry.html#.upsertDBDir">upsertDBDir</a></li></ul></li><li><a href="module-service_logger.html">service/logger</a></li><li><a href="module-service_remote-pipeline-runner-pool.html">service/remote-pipeline-runner-pool</a><ul class='methods'><li data-type='method'><a href="module-service_remote-pipeline-runner-pool.html#.init">init</a></li><li data-type='method'><a href="module-service_remote-pipeline-runner-pool.html#.teardown">teardown</a></li></ul></li><li><a href="module-service_seed-consortia.html">service/seed-consortia</a></li></ul><h3>Global</h3><ul><li><a href="global.html#failStderr">failStderr</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">src/services/computation-registry.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+
+/**
+* @module service/computation-registry
+*/
+
+const coinstacCommon = require('coinstac-common');
+const os = require('os');
+const mkdirp = require('mkdirp-promise');
+const path = require('path');
+
+const logger = require('./logger');
+
+/**
+ * @property instance ComputationRegistry instance
+ */
+module.exports = {
+  instance: null,
+
+  /**
+   * get ComputationRegistry instance
+   * @returns {ComputationRegistry}
+   */
+  get() {
+    /* istanbul ignore next */
+    if (!this.instance) {
+      throw new Error('computationRegistry must be configured before retrieval');
+    }
+    return this.instance;
+  },
+
+  /**
+   * get computations path.
+   * @returns {string} path where computations are stored
+   */
+  getComputationsPath() {
+    return path.join(
+      os.tmpdir(),
+      'coinstac-server-core',
+      'computations'
+    );
+  },
+
+  /**
+   * initialize the server ComputationRegistry
+   * {@link http://mrn-code.github.io/coinstac-common/ComputationRegistry.html ComputationRegistry}
+   * @returns {Promise}
+   */
+  init() {
+    logger.info('Initializing computation registry');
+
+    return coinstacCommon.services.computationRegistry({
+      path: this.getComputationsPath(),
+    })
+    .then((reg) => (this.instance = reg))
+    .then(() => this.upsertComputationsDir())
+    .then(() => {
+      logger.info('Computation registry set up');
+      return this.get();
+    });
+  },
+
+  /**
+   * upsert computations dir.
+   * @returns {Promise} resolves with computations dir
+   */
+  upsertComputationsDir() {
+    return mkdirp(this.getComputationsPath());
+  },
+
+  /**
+   * removes singleton registry instance.  old instances is garbage
+   * collected
+   * @returns {undefined}
+   */
+  teardown() {
+    delete this.instance;
+  },
+
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
