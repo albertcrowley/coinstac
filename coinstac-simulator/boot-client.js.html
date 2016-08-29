@@ -23,7 +23,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-simulator.html">simulator</a><ul class='methods'><li data-type='method'><a href="module-simulator.html#.killProcesses">killProcesses</a></li><li data-type='method'><a href="module-simulator.html#.run">run</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-simulator.html">simulator</a><ul class='methods'><li data-type='method'><a href="module-simulator.html#.run">run</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -62,7 +62,7 @@ const boot = function boot(opts) {
   if (!opts.declPath || !opts.username) {
     throw new ReferenceError('missing decl or username');
   }
-  decl = require(opts.declPath);
+  decl = require(opts.declPath); // eslint-disable-line global-require
   username = opts.username;
   const poolPatch = { dbRegistry: { isLocal: true } };
 
@@ -79,7 +79,9 @@ const boot = function boot(opts) {
     return pool.init()
     .then(() => {
       // stub registry (to circumvent needing to d/l DecentralizedComputation)
+      /* eslint-disable global-require */
       const decentralizedComputation = require(decl.computationPath);
+      /* eslint-enable global-require */
       return stubComputationToRegistry({
         computation: decentralizedComputation,
         registry: pool.computationRegistry,

@@ -23,7 +23,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-simulator.html">simulator</a><ul class='methods'><li data-type='method'><a href="module-simulator.html#.killProcesses">killProcesses</a></li><li data-type='method'><a href="module-simulator.html#.run">run</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-simulator.html">simulator</a><ul class='methods'><li data-type='method'><a href="module-simulator.html#.run">run</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -60,8 +60,8 @@ const lifecycle = require('./lifecycle-runner');
  * @returns {Promise}
  */
 const boot = function boot(opts) {
-  const decl = require(opts.declPath);
-  const dComp = require(decl.computationPath);
+  const decl = require(opts.declPath); // eslint-disable-line global-require
+  const dComp = require(decl.computationPath); // eslint-disable-line global-require
   const optsPatch = { dbRegistry: { isRemote: true } };
   let pool;
   return poolInitializer.getPoolOpts(optsPatch)
