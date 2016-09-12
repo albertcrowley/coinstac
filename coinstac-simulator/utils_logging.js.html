@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>stub-computation-to-registry.js - Documentation</title>
+    <title>utils/logging.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -28,7 +28,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">stub-computation-to-registry.js</h1>
+    <h1 class="page-title">utils/logging.js</h1>
     
 
     
@@ -40,39 +40,57 @@
         <article>
             <pre class="prettyprint source linenums"><code>'use strict';
 
-/**
- * @private
- * @module stubComputationToRegistry
- */
+const winston = require('winston');
+
+const logger = new (winston.Logger)({
+  transports: [
+    new (winston.transports.Console)({
+      colorize: true,
+      level: 'verbose',
+    }),
+  ],
+});
 
 /**
- * Stubs a DecentralizedComputation to a computation into
- * a computation registry
- * @param {object} opts
- * @param {DecentralizedComputation} opts.computation
- * @param {ComputationRegistry} opts.registry
- * @returns {Promise} resolves when computation stubbed into registry
+ * Get a `data` event handler for a stdout or stderr stream.
+ *
+ * @param {ChildProcess} childProcess
+ * @param {string} name Give it a name for easy identification
+ * @param {string} [mode='info'] Logger mode
+ * @returns {Function} event handler
  */
-module.exports = function stubComputationToRegistry(opts) {
-  if (!opts) { throw new ReferenceError('opts required'); }
-  if (!opts.computation || !opts.registry) {
-    throw new ReferenceError('computation &amp; registry requried');
-  }
-  const comp = opts.computation;
-  const url = `https://github.com/MRN-Code/${comp.name}`;
+function getStdDataHandler(childProcess, name, mode = 'info') {
+  return function stdDataHandler(data) {
+    logger[mode](`${name} [${childProcess.pid}]: ${data.slice(0, -1)}`);
+  };
+}
 
-  opts.registry.registry.push({
-    name: comp.name,
-    tags: [comp.version],
-    url,
+/**
+ * Get a logger for a client or server child process.
+ *
+ * @param {string} [level='verbose']
+ * @returns {Winston} Re-configured logger instance
+ */
+function getChildProcessLogger(level = 'verbose') {
+  logger.configure({
+    level,
+    transports: [
+      new (winston.transports.Console)({
+        /** {@link https://www.npmjs.com/package/winston#custom-log-format} */
+        formatter: options => {
+          return options.message ? options.message : '';
+        },
+      }),
+    ],
   });
 
-  return opts.registry._doAdd({
-    definition: comp,
-    name: comp.name,
-    url,
-    version: comp.version,
-  });
+  return logger;
+}
+
+module.exports = {
+  getChildProcessLogger,
+  getStdDataHandler,
+  logger,
 };
 </code></pre>
         </article>

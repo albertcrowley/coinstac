@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>file-loader.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-simulator.html">simulator</a></li><li><a href="module-src_boot-clients.html">src/boot-clients</a></li></ul><h3>Global</h3><ul><li><a href="global.html#createUserData">createUserData</a></li><li><a href="global.html#formatter">formatter</a></li><li><a href="global.html#getChildProcessLogger">getChildProcessLogger</a></li><li><a href="global.html#getReadyClient">getReadyClient</a></li><li><a href="global.html#getStdDataHandler">getStdDataHandler</a></li><li><a href="global.html#loadFiles">loadFiles</a></li><li><a href="global.html#run">run</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">file-loader.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use-strict';
+
+const glob = require('glob');
+const loadCSV = require('csv-load-sync');
+const path = require('path');
+const fs = require('fs');
+const _ = require('lodash');
+
+/**
+ * syncronously loads and parses files from a globbing pattern, and concats the data
+ * into an array
+ * @param  {string} fileGlob glob pattern for input files
+ * @param  {string} delim    delimiter used for txt files, defualts to ','
+ * @return {array}          array of parsed input data
+ */
+const loadFiles = (fileGlob, delim) => {
+  const delimiter = delim || ',';
+  const files = glob.sync(fileGlob);
+  let userData = [];
+  files.forEach((filePath) => {
+    if (fs.lstatSync(filePath).isFile()) {
+      const data = fs.readFileSync(filePath, 'utf8');
+      const ext = path.extname(filePath);
+      if (ext === '.json') {
+        // expects JSON array
+        userData = userData.concat(JSON.parse(data));
+      } else {
+        if (delimiter.match(/\n|\r/g)) {
+          userData = userData.concat(data.replace(/\n$|\r$/, '').split(delimiter));
+        } else {
+          userData = userData.concat(data.replace(/\n|\r/g, '').split(delimiter));
+        }
+      }
+    }
+  });
+  return userData;
+};
+/**
+ * Takes a input directory glob and/or a csv and returns an array of users
+ * constructed from its structure. The glob data files may be delimited text files
+ * or json arrays, an optional delimiter can be passed in for text files.
+ *
+ * The file structure should be as follows:
+ ************
+ * Glob:
+ ************
+ * path/to/Data Dir/
+ * ├── some-user1
+ * │   └── x
+ * │   │   ├── some-data.txt
+ * │   │   └── some-data.txt
+ * │   └── y
+ * │       ├── some-data.txt
+ * │       └── some-data.txt
+ * └── some-user2
+ *    └── x
+ *    │   ├── some-data.txt
+ *    │   └── some-data.txt
+ *    └── y
+ *        ├── some-data.txt
+ *        └── some-data.txt
+ ************
+ * CSV:
+ ************
+ * user,t,u,v
+ * some-user1,1,2,2
+ * some-user2,4,5,6
+ *
+ * @param  {string} [dirGlob]      the glob path to the input data
+ *                                ie: './path/to/My Data/ * * / * /.txt' (without asterisk spaces)
+ * @param  {string} [csv]         path to variable csv to load
+ * @param  {string} [delimiter]   optional delimiter to use with glob files
+ * @return {array}                array of userData objects
+ */
+const createUserData = (dirGlob, csv, delimiter) => {
+  const userData = {};
+  if (dirGlob) {
+    const baseDir = dirGlob.match(/(?:(?!\*\*).)*/);
+    const fileList = glob.sync(dirGlob);
+    fileList.forEach((file) => {
+      const pathInfo = file.replace(baseDir, '').split('/');
+      // assumes the first glob dir is the users
+      // and second is the variable
+      if (!userData[pathInfo[0]]) {
+        userData[pathInfo[0]] = { [pathInfo[1]]: [] };
+      } else if (!userData[pathInfo[0]][pathInfo[1]]) {
+        userData[pathInfo[0]][pathInfo[1]] = [];
+      }
+      userData[pathInfo[0]][pathInfo[1]] = userData[pathInfo[0]][pathInfo[1]]
+        .concat(loadFiles(file, delimiter));
+    });
+  }
+  if (csv) {
+    const parsedCSV = loadCSV(csv);
+    if (dirGlob &amp;&amp; parsedCSV.length !== Object.keys(userData).length) {
+      throw new Error('CSV user number does not match directory user number');
+    }
+    parsedCSV.forEach((csvUser) => {
+      userData[csvUser.user] = _.merge(userData[csvUser.user], _.omit(csvUser, 'user'));
+    });
+  }
+  // convert our object to an array
+  return Object.keys(userData).map((key) => { return userData[key]; });
+};
+
+module.exports = {
+  createUserData,
+  loadFiles,
+  loadFile: loadFiles,
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

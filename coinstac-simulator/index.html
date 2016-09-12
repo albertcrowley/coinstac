@@ -23,7 +23,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-simulator.html">simulator</a><ul class='methods'><li data-type='method'><a href="module-simulator.html#.run">run</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-simulator.html">simulator</a></li><li><a href="module-src_boot-clients.html">src/boot-clients</a></li></ul><h3>Global</h3><ul><li><a href="global.html#createUserData">createUserData</a></li><li><a href="global.html#formatter">formatter</a></li><li><a href="global.html#getChildProcessLogger">getChildProcessLogger</a></li><li><a href="global.html#getReadyClient">getReadyClient</a></li><li><a href="global.html#getStdDataHandler">getStdDataHandler</a></li><li><a href="global.html#loadFiles">loadFiles</a></li><li><a href="global.html#run">run</a></li></ul>
 </nav>
 
 <div id="main">
@@ -47,50 +47,112 @@
 
 
     <section class="readme">
-        <article><h1>coinstac-simulator</h1><p><img src="https://raw.githubusercontent.com/MRN-Code/coinstac-common/master/img/coinstac.png" height="75px" /></p>
-<p><a href="https://codeship.com/projects/141922"> <img src="https://codeship.com/projects/370d2330-d2b2-0133-5da2-5e07c373472b/status?branch=master" alt="Codeship Status for MRN-Code/coinstac-simulator"></a></p>
-<p>the official API documentation <a href="http://mrn-code.github.io/coinstac-simulator/">lives here</a>, albeit there's not much too it!</p>
-<h2>what</h2><p>provides a runner for you to test your <a href="http://mrn-code.github.io/coinstac-common/DecentralizedComputation.html">DecentralizedComputations</a>.</p>
-<p>we offer both a <em>cli</em> tool and an importable <em>library</em></p>
-<p><img src="https://raw.githubusercontent.com/MRN-Code/coinstac-simulator/master/media/demo-capture.gif" /></p>
-<h2>how</h2><p>regardless if you are simulating by using our CLI or the library, you need to define a &quot;declaration&quot; on how your simulation will be run.  you are welcome to <a href="https://github.com/MRN-Code/coinstac-decentralized-algorithm-integration/blob/master/test/declarations/">look here at some examples</a>.</p>
-<p>a simulation &quot;declaration&quot; is a <code>.js</code> file with the following shape:</p>
-<pre class="prettyprint source lang-js"><code>module.exports = {
-  computationPath: './path/to/decentralized-computation.js',
-  users: [
-    { username: 'user_a', data: { ... } },
-    { username: 'user_b', data: { ... } },
-  ],
-  server: { // optional
-    preRun: [
-      (done) => { /* do something interesting */},
+        <article><h1>coinstac-simulator</h1><p><img src="https://raw.githubusercontent.com/MRN-Code/coinstac/master/img/coinstac.png" height="75px"></p>
+<p>COINSTAC simulator for computation runs. <a href="http://mrn-code.github.io/coinstac/">Documentation</a>.</p>
+<p><img src="https://raw.githubusercontent.com/MRN-Code/coinstac/master/packages/coinstac-simulator/media/demo-capture.gif" /></p>
+<h2>Installation</h2><p>Ensure you have <a href="https://nodejs.org/">Node.js</a> installed. Then, the following command from a shell:</p>
+<pre class="prettyprint source lang-shell"><code>npm install --global coinstac-simulator</code></pre><h2>Use</h2><p><em>coinstac-simulator</em> contains a command line interface and a Node.js API. Read the <a href="https://github.com/MRN-Code/coinstac/blob/master/guides/computation-development.md"><em>Computation Development</em> guide</a> for more information on creating decentralized computations and testing them with <em>coinstac-simulator</em>.</p>
+<h3>CLI</h3><p><em>coinstac-simulator</em> has one required flag, <code>--declaration</code> (<code>-d</code> for short). Use it to designate the location of your declaration file:</p>
+<pre class="prettyprint source lang-shell"><code>coinstac-simulator -d ./path/to/declaration.js</code></pre><p>Run <code>coinstac-simulator --help</code> for more information on how to use the CLI.</p>
+<h3>Programmatic Use</h3><p>Ensure that a valid <em>package.json</em> exists in your project’s directory (easily create one with <code>npm init</code>). Then, add <em>coinstac-simulator</em> as a dependency:</p>
+<pre class="prettyprint source lang-shell"><code>npm install coinstac-simulator --save</code></pre><p><em>coinstac-simulator</em> is now available in your JavaScript modules. Include it using <code>require</code>:</p>
+<pre class="prettyprint source lang-js"><code>// declaration.js
+const coinstacSimulator = require('coinstac-simulator');</code></pre><h4>coinstacSimulator.createUserData(pattern, [csvPath], [delimiter])</h4><ul>
+<li><strong><code>pattern</code></strong> <code>&lt;String&gt;</code>: File globbing pattern passed to <a href="https://www.npmjs.com/package/glob">glob</a></li>
+<li><strong><code>csvPath</code></strong> <code>&lt;String&gt;</code>: Path to a CSV variables file to load</li>
+<li><strong><code>delimiter</code></strong> <code>&lt;String&gt;</code>: CSV delimiter</li>
+<li>return: <code>&lt;Array&gt;</code> Collection of user data</li>
+</ul>
+<p>Synchronously transpose a directory structure into user data suitable for simulation. This method supports a particular directory structure:</p>
+<pre class="prettyprint source lang-shell"><code>$ tree path/to/data/
+path/to/data/
+├── user-1
+│   └── x
+│   │   ├── data-1.txt
+│   │   └── data-2.txt
+│   └── y
+│       ├── data-3.txt
+│       └── data-4.txt
+└── user-2
+  └── x
+  │   ├── data-5.txt
+  │   └── data-6.txt
+  └── y
+      ├── data-7.txt
+      └── data-8.txt</code></pre><p>Top-level directories are treated as users; their immediate subdirectories are treated as variable names. The subdirectories’ files’ data are loading into these properties, like so:</p>
+<pre class="prettyprint source lang-js"><code>[
+  // user-1:
+  {
+    x: [
+      // data-1.txt, data-2.txt
     ],
-    postRun: [
-      (done) => { /* do something interesting */},
+    y: [
+      // data-3.txt, data-4.txt
     ],
   },
+
+  // user-2:
+  {
+    x: [
+      // data-5.txt, data-6.txt
+    ],
+    y: [
+      // data-7.txt, data-8.txt
+    ],
+  },
+]</code></pre><p>Adding a supporting CSV via the <code>csvPath</code> argument aids in parsing files:</p>
+<pre class="prettyprint source lang-csv"><code>user,t,u,v
+user-1,1,2,2
+user-2,4,5,6</code></pre><p><code>createUserData</code> is most useful in a declaration file:</p>
+<pre class="prettyprint source lang-js"><code>const coinstacSimulator = require('coinstac-simulator');
+
+module.exports = {
+  computationPath: './path/to/computation.js',
+  local: coinstacSimulator.createUserData(
+    './path/to/data/**/*.txt',
+    './path/to/vars.csv'
+  ),
+};</code></pre><h4>coinstacSimulator.loadFiles(pattern, [delimiter]):</h4><ul>
+<li><strong><code>pattern</code></strong> <code>&lt;String&gt;</code>: File globbing pattern passed to <a href="https://www.npmjs.com/package/glob">glob</a></li>
+<li><strong><code>delimiter</code></strong> <code>&lt;String&gt;</code>: CSV delimiter</li>
+<li>return: <code>&lt;Array&gt;</code> Parsed input data</li>
+</ul>
+<p>Synchronously loads files' data. <code>loadFiles</code> is most useful in a declaration file:</p>
+<pre class="prettyprint source lang-js"><code>// declaration.js
+const coinstacSimulator = require('coinstac-simulator');
+
+module.exports = {
+  computationPath: './path/to/computation.js',
+  local: [
+    {
+      x: coinstacSimulator.loadFiles('./path/to/files/1/*.txt'),
+    },
+    {
+      x: coinstacSimulator.loadFiles('./path/to/files/2/*.txt'),
+    }, {
+      x: coinstacSimulator.loadFiles('./path/to/files/3/*.txt'),
+    },
+  ],
+};</code></pre><h4>coinstacSimulator.run(declarationPath)</h4><ul>
+<li><strong><code>declarationPath</code></strong> <code>&lt;String&gt;</code>: Path to declaration file</li>
+<li>return: <code>&lt;Promise&gt;</code> Resolves upon simulator run completion, or rejects with a run error</li>
+</ul>
+<p><code>run</code> is <em>coinstac-simulator</em>’s programmatic function for running an entire simulation. Use it if you don’t want to use the CLI:</p>
+<pre class="prettyprint source lang-js"><code>const coinstacSimulator = require('coinstac-simulator');
+
+coinstacSimulator.run('./path/to/declaration.js')
+  .then(() => console.log('Simulation run complete!'))
+  .catch(error => console.error('Simulation run failed!', error));</code></pre><h2>Debugging</h2><p>Set the <code>verbose</code> property in your declaration to <code>true</code>:</p>
+<pre class="prettyprint source lang-js"><code>// declaration.js
+module.exports = {
+  computationPath:
+  local: [
+    // ...
+  ],
   verbose: true,
-};</code></pre><ul>
-<li><em>@NOTE</em> the <strong>data</strong> property in each <code>users</code> object is <em>optional</em>, and can be any JSON serializable input</li>
-<li><em>@NOTE</em> the declaration must always be <em>javascript</em>.  feel free to submit a PR to support other types if you strongly prefer YAML/JSON/something-else!</li>
-</ul>
-<h3>cli mode</h3><ul>
-<li><code>npm install -g coinstac-simulator</code></li>
-<li><code>coinstac-simulator -d path-to-declaration.js</code></li>
-</ul>
-<h3>library</h3><pre class="prettyprint source lang-js"><code>const sim = require('coinstac-simulator');
-const handleErrors = require('coinstac-simulator/src/handle-errors')();
-const declaration = require('./path-to-declaration.js');
-sim.setup(declaration, (err) => {
-  if (err) { throw err; }
-  sim.teardown((err) => {
-    if (err) { throw err; }
-  });
-});</code></pre><h2>why</h2><p>because decentralized computation authoring can be difficult.  you should validate your process before going live!</p>
-<h2>when</h2><p>now.</p>
-<h2>where</h2><p>right there at your desk.</p>
-<h3>debugging</h3><p>if <code>verbose</code> is toggled to <code>true</code> in your computation definition for <a href="http://mrn-code.github.io/coinstac-common/CommandComputation.html"><code>cmd</code> type Computations</a>, you can write to <code>stderr</code> to have your information streamed onto the screen.  if that is otherwise insufficient, you will need to capture the inputs to the process, (via parsing the CLI input), and run your faulty script/program using your normal debug strategies of choice for whichever particular language you are using.</p>
-<h2>it's not working</h2><p>file an issue!  we will try and be prompt, and even try to help you with your algorithms if necessary.</p></article>
+};</code></pre><p>This ensures that all <code>console.log</code>s in your JavaScript computations and stdout/stderr writes in your command computations will persist to the main process’s logger and your terminal.</p>
+<p>View the <a href="https://github.com/MRN-Code/coinstac/blob/master/guides/computation-development.md"><em>Computation Development</em> guide</a> for more information on computations in COINSTAC.</p>
+<h2>License</h2><p>MIT. See <a href="./LICENSE">LICENSE</a> for details.</p></article>
     </section>
 
 
@@ -103,7 +165,7 @@ sim.setup(declaration, (err) => {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> using the Minami theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>stub-computation-to-registry.js - Documentation</title>
+    <title>src/boot-clients - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -28,55 +28,127 @@
 
 <div id="main">
     
-    <h1 class="page-title">stub-computation-to-registry.js</h1>
+    <h1 class="page-title">src/boot-clients</h1>
     
 
     
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>'use strict';
+        
+            
+        
+    
+</header>
 
-/**
- * @private
- * @module stubComputationToRegistry
- */
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>Boot clients.</p></div>
+        
 
-/**
- * Stubs a DecentralizedComputation to a computation into
- * a computation registry
- * @param {object} opts
- * @param {DecentralizedComputation} opts.computation
- * @param {ComputationRegistry} opts.registry
- * @returns {Promise} resolves when computation stubbed into registry
- */
-module.exports = function stubComputationToRegistry(opts) {
-  if (!opts) { throw new ReferenceError('opts required'); }
-  if (!opts.computation || !opts.registry) {
-    throw new ReferenceError('computation &amp; registry requried');
-  }
-  const comp = opts.computation;
-  const url = `https://github.com/MRN-Code/${comp.name}`;
+        
+            
 
-  opts.registry.registry.push({
-    name: comp.name,
-    tags: [comp.version],
-    url,
-  });
 
-  return opts.registry._doAdd({
-    definition: comp,
-    name: comp.name,
-    url,
-    version: comp.version,
-  });
-};
-</code></pre>
-        </article>
-    </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="boot-clients.js.html">boot-clients.js</a>, <a href="boot-clients.js.html#line86">line 86</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
