@@ -23,9 +23,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-server.html">server</a><ul class='methods'><li data-type='method'><a href="module-server.html#.start">start</a></li><li data-type='method'><a href="module-server.html#.stop">stop</a></li></ul></li><li><a href="module-service_computation-registry.html">service/computation-registry</a><ul class='methods'><li data-type='method'><a href="module-service_computation-registry.html#.get">get</a></li><li data-type='method'><a href="module-service_computation-registry.html#.getComputationsPath">getComputationsPath</a></li><li data-type='method'><a href="module-service_computation-registry.html#.init">init</a></li><li data-type='method'><a href="module-service_computation-registry.html#.teardown">teardown</a></li><li data-type='method'><a href="module-service_computation-registry.html#.upsertComputationsDir">upsertComputationsDir</a></li></ul></li><li><a href="module-service_computations-database-syncer.html">service/computations-database-syncer</a><ul class='methods'><li data-type='method'><a href="module-service_computations-database-syncer.html#~getComputationFinder">getComputationFinder</a></li><li data-type='method'><a href="module-service_computations-database-syncer.html#~sync">sync</a></li></ul></li><li><a href="module-service_db-registry.html">service/db-registry</a><ul class='methods'><li data-type='method'><a href="module-service_db-registry.html#.get">get</a></li><li data-type='method'><a href="module-service_db-registry.html#.getDBPath">getDBPath</a></li><li data-type='method'><a href="module-service_db-registry.html#.init">init</a></li><li data-type='method'><a href="module-service_db-registry.html#.teardown">teardown</a></li><li data-type='method'><a href="module-service_db-registry.html#.upsertDBDir">upsertDBDir</a></li></ul></li><li><a href="module-service_remote-pipeline-runner-pool.html">service/remote-pipeline-runner-pool</a><ul class='methods'><li data-type='method'><a href="module-service_remote-pipeline-runner-pool.html#.init">init</a></li><li data-type='method'><a href="module-service_remote-pipeline-runner-pool.html#.teardown">teardown</a></li></ul></li><li><a href="module-service_seed-consortia.html">service/seed-consortia</a></li><li><a href="service_logger%250A%250A%257B@link%2520https___www.npmjs.com_package_winston%257Dmodule_.html">service/logger
-
-{@link https://www.npmjs.com/package/winston}</a></li></ul><h3>Global</h3><ul><li><a href="global.html#failStderr">failStderr</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CoinstacServer.html">CoinstacServer</a><ul class='methods'><li data-type='method'><a href="CoinstacServer.html#start">start</a></li><li data-type='method'><a href="CoinstacServer.html#stop">stop</a></li></ul></li><li><a href="src_coinstac-server.html">src/coinstac-server</a></li></ul><h3>Modules</h3><ul><li><a href="module-service_computation-registry.html">service/computation-registry</a><ul class='methods'><li data-type='method'><a href="module-service_computation-registry.html#.get">get</a></li><li data-type='method'><a href="module-service_computation-registry.html#.getComputationsPath">getComputationsPath</a></li><li data-type='method'><a href="module-service_computation-registry.html#.init">init</a></li><li data-type='method'><a href="module-service_computation-registry.html#.teardown">teardown</a></li><li data-type='method'><a href="module-service_computation-registry.html#.upsertComputationsDir">upsertComputationsDir</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#coinstacCommon">coinstacCommon</a></li><li><a href="global.html#errorHandler">errorHandler</a></li><li><a href="global.html#failStderr">failStderr</a></li><li><a href="global.html#getComputationFinder">getComputationFinder</a></li><li><a href="global.html#sync">sync</a></li></ul>
 </nav>
 
 <div id="main">
@@ -43,14 +41,6 @@
             <pre class="prettyprint source linenums"><code>'use strict';
 
 /**
- * @module service/computations-database-syncer
- */
-
-const computationRegistryService = require('./computation-registry');
-const dbRegistryService = require('./db-registry');
-const spread = require('lodash/spread');
-
-/**
  * Get a computation finder function.
  *
  * @param {Object} target
@@ -58,22 +48,17 @@ const spread = require('lodash/spread');
  * @param {string} target.version
  * @returns {Function}
  */
-function getComputationFinder(target) {
-  return function computationFinder(computation) {
-    return (
-      computation.name === target.name &amp;&amp; computation.version === target.version
-    );
-  };
-}
+const getComputationFinder = target => computation => (
+  computation.name === target.name &amp;&amp; computation.version === target.version
+);
 
 /**
  * Get computation documents diff.
- *
- * Identifies which decentralized computations from the "golden set" are
- * missing from the computation database's documents, which exist in the db
- * but aren't in the golden set, and those that need to be updated.
- *
  * @private
+ *
+ * @description Identifies which decentralized computations from the "golden
+ * set" are missing from the computation database's documents, which exist in
+ * the db but aren't in the golden set, and those that need to be updated.
  *
  * @see ComputationRegistry
  * @see DecentralizedComputation
@@ -113,29 +98,7 @@ function getComputationsDiff(decentralizedComputations, computationDocs) {
     return memo;
   }, []);
 
-  return {
-    add: toAdd,
-    delete: toDelete,
-    update: toUpdate,
-  };
-}
-
-/**
- * update database with computation diff. diff represents
- * the difference between the server's current database state
- * and the computations requested per the coinstac computation
- * whitelist
- * @private
- * @param {object} diff
- * @returns {Promise} Resolves with diff object
- */
-function patchDBWithComputationDiff(diff) {
-  const computationsDb = dbRegistryService.get().get('computations');
-
-  return computationsDb.bulkDocs(diff.add)
-  .then(() => computationsDb.bulkDocs(diff.update))
-  .then(() => computationsDb.bulkDocs(diff.delete))
-  .then(() => diff);
+  return { toAdd, toDelete, toUpdate };
 }
 
 /**
@@ -145,24 +108,42 @@ function patchDBWithComputationDiff(diff) {
  * the goldenset/whitelist. The remote ComputationRegistry uses the JSON file
  * as its whitelist.
  *
- * @returns {Promise} Resolves with diff object
+ * @param {Pouchy} computationsDatabase
+ * @param {DecentralizedComputation[]} decentralizedComputations
+ * @returns {Promise}
  */
-function sync() {
-  return Promise.all([
-    computationRegistryService.get().all(),
-    dbRegistryService.get().get('computations').all(),
-  ])
-    .then(spread(getComputationsDiff))
-    .then(patchDBWithComputationDiff);
+function sync(computationsDatabase, decentralizedComputations) {
+  return computationsDatabase.all()
+    .then((computationDocs) => {
+      const { toAdd, toDelete, toUpdate } = getComputationsDiff(
+        decentralizedComputations,
+        computationDocs
+      );
+
+      return computationsDatabase.bulkDocs(
+        toAdd.concat(toDelete, toUpdate)
+      );
+    })
+    .then((responses) => {
+      /**
+       * Ensure bulkDocs's response doesn't contain an error.
+       * {@link https://pouchdb.com/api.html#batch_create}
+       */
+      const error = responses.find(r => r.error);
+
+      if (error) {
+        throw new Error(
+          `Error synchronizing computation documents: ${error.message}`
+        );
+      }
+    });
 }
 
-/* eslint-disable object-shorthand */
 module.exports = {
-  getComputationsDiff: getComputationsDiff,
-  patchDBWithComputationDiff: patchDBWithComputationDiff,
-  sync: sync,
+  getComputationsDiff,
+  sync,
 };
-/* eslint-enable object-shorthand */
+
 </code></pre>
         </article>
     </section>

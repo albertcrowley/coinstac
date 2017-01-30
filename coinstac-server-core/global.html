@@ -23,9 +23,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-server.html">server</a><ul class='methods'><li data-type='method'><a href="module-server.html#.start">start</a></li><li data-type='method'><a href="module-server.html#.stop">stop</a></li></ul></li><li><a href="module-service_computation-registry.html">service/computation-registry</a><ul class='methods'><li data-type='method'><a href="module-service_computation-registry.html#.get">get</a></li><li data-type='method'><a href="module-service_computation-registry.html#.getComputationsPath">getComputationsPath</a></li><li data-type='method'><a href="module-service_computation-registry.html#.init">init</a></li><li data-type='method'><a href="module-service_computation-registry.html#.teardown">teardown</a></li><li data-type='method'><a href="module-service_computation-registry.html#.upsertComputationsDir">upsertComputationsDir</a></li></ul></li><li><a href="module-service_computations-database-syncer.html">service/computations-database-syncer</a><ul class='methods'><li data-type='method'><a href="module-service_computations-database-syncer.html#~getComputationFinder">getComputationFinder</a></li><li data-type='method'><a href="module-service_computations-database-syncer.html#~sync">sync</a></li></ul></li><li><a href="module-service_db-registry.html">service/db-registry</a><ul class='methods'><li data-type='method'><a href="module-service_db-registry.html#.get">get</a></li><li data-type='method'><a href="module-service_db-registry.html#.getDBPath">getDBPath</a></li><li data-type='method'><a href="module-service_db-registry.html#.init">init</a></li><li data-type='method'><a href="module-service_db-registry.html#.teardown">teardown</a></li><li data-type='method'><a href="module-service_db-registry.html#.upsertDBDir">upsertDBDir</a></li></ul></li><li><a href="module-service_remote-pipeline-runner-pool.html">service/remote-pipeline-runner-pool</a><ul class='methods'><li data-type='method'><a href="module-service_remote-pipeline-runner-pool.html#.init">init</a></li><li data-type='method'><a href="module-service_remote-pipeline-runner-pool.html#.teardown">teardown</a></li></ul></li><li><a href="module-service_seed-consortia.html">service/seed-consortia</a></li><li><a href="service_logger%250A%250A%257B@link%2520https___www.npmjs.com_package_winston%257Dmodule_.html">service/logger
-
-<a href="https://www.npmjs.com/package/winston">https://www.npmjs.com/package/winston</a></a></li></ul><h3>Global</h3><ul><li><a href="global.html#failStderr">failStderr</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CoinstacServer.html">CoinstacServer</a><ul class='methods'><li data-type='method'><a href="CoinstacServer.html#start">start</a></li><li data-type='method'><a href="CoinstacServer.html#stop">stop</a></li></ul></li><li><a href="src_coinstac-server.html">src/coinstac-server</a></li></ul><h3>Modules</h3><ul><li><a href="module-service_computation-registry.html">service/computation-registry</a><ul class='methods'><li data-type='method'><a href="module-service_computation-registry.html#.get">get</a></li><li data-type='method'><a href="module-service_computation-registry.html#.getComputationsPath">getComputationsPath</a></li><li data-type='method'><a href="module-service_computation-registry.html#.init">init</a></li><li data-type='method'><a href="module-service_computation-registry.html#.teardown">teardown</a></li><li data-type='method'><a href="module-service_computation-registry.html#.upsertComputationsDir">upsertComputationsDir</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#coinstacCommon">coinstacCommon</a></li><li><a href="global.html#errorHandler">errorHandler</a></li><li><a href="global.html#failStderr">failStderr</a></li><li><a href="global.html#getComputationFinder">getComputationFinder</a></li><li><a href="global.html#sync">sync</a></li></ul>
 </nav>
 
 <div id="main">
@@ -108,9 +106,260 @@
     
 
     
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="coinstacCommon"><span class="type-signature">(constant) </span>coinstacCommon<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Integration test to ensure computation documents aren't duplicated.</p>
+<p>Strategy:</p>
+<ol>
+<li>Spin up faux CouchDB using pouchdb-server</li>
+<li>Seed with stubbed computation docs, some of which need to be deleted</li>
+<li>Initialize server by calling <code>CoinstacServer#start</code></li>
+<li>Shut down server</li>
+<li>Get database state</li>
+<li>Assert database docs are as expected</li>
+</ol>
+<p><a href="https://github.com/MRN-Code/coinstac/issues/100">https://github.com/MRN-Code/coinstac/issues/100</a></p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="test_duplicate-docs.js.html">test/duplicate-docs.js</a>, <a href="test_duplicate-docs.js.html#line18">line 18</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
 
     
         <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="errorHandler"><span class="type-signature"></span>errorHandler<span class="signature">(error, promise<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Error handler for server errors, process <code>uncaughtException</code>s and
+process <code>unhandledRejection</code>s.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>error</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Error</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>promise</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Promise</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_index.js.html">src/index.js</a>, <a href="src_index.js.html#line13">line 13</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         
             
@@ -199,14 +448,14 @@
 
     
 
-    <h4 class="name" id="module:service/seed-consortia"><span class="type-signature"></span>module:service/seed-consortia<span class="signature">(config)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    <h4 class="name" id="getComputationFinder"><span class="type-signature"></span>getComputationFinder<span class="signature">(target)</span><span class="type-signature"> &rarr; {function}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>conditionally seeds consortia db</p>
+    <p>Get a computation finder function.</p>
 </div>
 
 
@@ -242,13 +491,13 @@
 
         <tr>
             
-                <td class="name"><code>config</code></td>
+                <td class="name"><code>target</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type">Object</span>
 
 
             
@@ -258,7 +507,79 @@
 
             
 
-            <td class="description last"><p>server config</p></td>
+            <td class="description last">
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>version</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -299,7 +620,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_services_seed-consortia.js.html">src/services/seed-consortia.js</a>, <a href="src_services_seed-consortia.js.html#line17">line 17</a>
+        <a href="src_services_computations-database-syncer.js.html">src/services/computations-database-syncer.js</a>, <a href="src_services_computations-database-syncer.js.html#line11">line 11</a>
     </li></ul></dd>
     
 
@@ -325,10 +646,181 @@
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    <p>resolves to boolean indicating whether seeding happened or not</p>
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">function</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="sync"><span class="type-signature"></span>sync<span class="signature">(computationsDatabase, decentralizedComputations)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Sync computations with the database.</p>
+<p>Update the computations db store to match computations as represented by
+the goldenset/whitelist. The remote ComputationRegistry uses the JSON file
+as its whitelist.</p>
 </div>
 
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>computationsDatabase</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Pouchy</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>decentralizedComputations</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;DecentralizedComputation></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_services_computations-database-syncer.js.html">src/services/computations-database-syncer.js</a>, <a href="src_services_computations-database-syncer.js.html#line75">line 75</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
 
 
 <dl class="param-type">

@@ -13,6 +13,7 @@
   <body class="markdown-body">
     <h1 id="coinstac">COINSTAC</h1>
 <p><img src="https://raw.githubusercontent.com/MRN-Code/coinstac/master/img/coinstac.png" height="75px"></p>
+<p><a href="https://app.codeship.com/projects/185577"> <img src="https://app.codeship.com/projects/9a9dd9b0-8f5a-0134-c5bf-0e20509a962c/status?branch=master" alt="Codeship Status for MRN-Code/coinstac"></a></p>
 <p><em>Collaborative Informatics and Neuroimaging Suite Toolkit for Anonymous Computation, User Interface.</em> A research project by your friends <a href="http://www.mrn.org/">The Mind Research Network</a>.</p>
 <p>COINSTAC is software to foster collaborative research, removing large barriers to traditional data-centric collaboration approaches.  It enables groups of users to run common analyses <em>on their own machines</em> over <em>their own datasets</em> with ease.  The results of these analyses are synchronized to the cloud, and undergo aggregate analyses processes using all contributor data.  Decentralized pipelines allow for distributed, iterative, and feature rich analyses to be run, opening new and exciting capabilities for collaborative computation.  If also offers data anonymity through differential privacy algorithms, so members do not need to fear PHI traceback.</p>
 <p>Let&#39;s do research!</p>
@@ -45,7 +46,7 @@
 <ul>
 <li><strong>decentralizing analyses and computation</strong><ul>
 <li>each user performs analyses/pipelines/etc all on their own computers. bits and pieces of each users&#39; output <em>may</em> be sent to a central compute node</li>
-<li>a central compute node performs a complimentary component of the group analysis, generally a Machine Learning algorithm.  this node may trigger adjusted computations on users&#39; machines, generally in effort to improve a model, which the research is trying to predict!  </li>
+<li>a central compute node performs a complimentary component of the group analysis, generally a Machine Learning algorithm.  this node may trigger adjusted computations on users&#39; machines, generally in effort to improve a model, which the research is trying to predict!</li>
 </ul>
 </li>
 <li><em>not</em> synchronizing full datasets. instead, <strong>synchronizing only resultant analysis metrics</strong><ul>
@@ -94,6 +95,13 @@
           <section>
             <h3><a href="coinstac-common">coinstac-common</a></h3>
             <p>COINSTAC core functionality.</p>
+          </section>
+        </li>
+      
+        <li>
+          <section>
+            <h3><a href="coinstac-computation-registry">coinstac-computation-registry</a></h3>
+            <p>Computation registry service for COINSTAC.</p>
           </section>
         </li>
       

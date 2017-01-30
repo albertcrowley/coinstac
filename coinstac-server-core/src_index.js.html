@@ -23,9 +23,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-server.html">server</a><ul class='methods'><li data-type='method'><a href="module-server.html#.start">start</a></li><li data-type='method'><a href="module-server.html#.stop">stop</a></li></ul></li><li><a href="module-service_computation-registry.html">service/computation-registry</a><ul class='methods'><li data-type='method'><a href="module-service_computation-registry.html#.get">get</a></li><li data-type='method'><a href="module-service_computation-registry.html#.getComputationsPath">getComputationsPath</a></li><li data-type='method'><a href="module-service_computation-registry.html#.init">init</a></li><li data-type='method'><a href="module-service_computation-registry.html#.teardown">teardown</a></li><li data-type='method'><a href="module-service_computation-registry.html#.upsertComputationsDir">upsertComputationsDir</a></li></ul></li><li><a href="module-service_computations-database-syncer.html">service/computations-database-syncer</a><ul class='methods'><li data-type='method'><a href="module-service_computations-database-syncer.html#~getComputationFinder">getComputationFinder</a></li><li data-type='method'><a href="module-service_computations-database-syncer.html#~sync">sync</a></li></ul></li><li><a href="module-service_db-registry.html">service/db-registry</a><ul class='methods'><li data-type='method'><a href="module-service_db-registry.html#.get">get</a></li><li data-type='method'><a href="module-service_db-registry.html#.getDBPath">getDBPath</a></li><li data-type='method'><a href="module-service_db-registry.html#.init">init</a></li><li data-type='method'><a href="module-service_db-registry.html#.teardown">teardown</a></li><li data-type='method'><a href="module-service_db-registry.html#.upsertDBDir">upsertDBDir</a></li></ul></li><li><a href="module-service_remote-pipeline-runner-pool.html">service/remote-pipeline-runner-pool</a><ul class='methods'><li data-type='method'><a href="module-service_remote-pipeline-runner-pool.html#.init">init</a></li><li data-type='method'><a href="module-service_remote-pipeline-runner-pool.html#.teardown">teardown</a></li></ul></li><li><a href="module-service_seed-consortia.html">service/seed-consortia</a></li><li><a href="service_logger%250A%250A%257B@link%2520https___www.npmjs.com_package_winston%257Dmodule_.html">service/logger
-
-{@link https://www.npmjs.com/package/winston}</a></li></ul><h3>Global</h3><ul><li><a href="global.html#failStderr">failStderr</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CoinstacServer.html">CoinstacServer</a><ul class='methods'><li data-type='method'><a href="CoinstacServer.html#start">start</a></li><li data-type='method'><a href="CoinstacServer.html#stop">stop</a></li></ul></li><li><a href="src_coinstac-server.html">src/coinstac-server</a></li></ul><h3>Modules</h3><ul><li><a href="module-service_computation-registry.html">service/computation-registry</a><ul class='methods'><li data-type='method'><a href="module-service_computation-registry.html#.get">get</a></li><li data-type='method'><a href="module-service_computation-registry.html#.getComputationsPath">getComputationsPath</a></li><li data-type='method'><a href="module-service_computation-registry.html#.init">init</a></li><li data-type='method'><a href="module-service_computation-registry.html#.teardown">teardown</a></li><li data-type='method'><a href="module-service_computation-registry.html#.upsertComputationsDir">upsertComputationsDir</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#coinstacCommon">coinstacCommon</a></li><li><a href="global.html#errorHandler">errorHandler</a></li><li><a href="global.html#failStderr">failStderr</a></li><li><a href="global.html#getComputationFinder">getComputationFinder</a></li><li><a href="global.html#sync">sync</a></li></ul>
 </nav>
 
 <div id="main">
@@ -42,66 +40,74 @@
         <article>
             <pre class="prettyprint source linenums"><code>'use strict';
 
+const CoinstacServer = require('./coinstac-server.js');
+const logger = require('./services/logger.js');
+
 /**
- * @module server
+ * Error handler for server errors, process `uncaughtException`s and
+ * process `unhandledRejection`s.
+ *
+ * @param {Error} error
+ * @param {Promise} [promise]
  */
-const computationRegistryService = require('./services/computation-registry');
-const computationsSyncer = require('./services/computations-database-syncer');
-const dbRegistryService = require('./services/db-registry');
-const remotePRPService = require('./services/remote-prp');
-const seedConsortia = require('./services/seed-consortia');
+function errorHandler(error, promise) {
+  if (typeof promise === 'undefined') {
+    logger.error('Server error', error);
+  } else {
+    logger.error('Server promise rejection', error, promise);
+  }
+
+  process.nextTick(() => process.exit(1));
+}
+
+process.on('uncaughtException', errorHandler);
+
+process.on('unhandledRejection', errorHandler);
+
+process.on('exit', () => {
+  logger.info('Shutting down server…');
+});
+
+let server;
 
 module.exports = {
-
   /**
-   * exposes primary server components
+   * Get the server instance.
    * @private
-   * @returns {undefined}
+   *
+   * @returns {(CoinstacServer|undefined)}
    */
-  exposeInternals() {
-    this.computationRegistry = computationRegistryService.get();
-    this.dbRegistry = dbRegistryService.get();
-    this.pool = remotePRPService.pool;
+  getInstance() {
+    return server;
   },
 
   /**
+   * Start the server.
    *
-   * Set up registries, initializers and listeners.
-   *
-   * @param {object} [config={}]
-   * @param {(string|object[])} [config.seed] Whether or not to seed the database.
-   * This only seeds if no documents exist in the `consortia` database. Pass
-   * JSON as a string or a collection of document objects.
-   * @param {string} [config.dbUrl] Database URL.
-   * @param {boolean} [config.inMemory=false] Use an in-memory database using
-   * instead of writing to disk.
+   * @param {Object} [config]
    * @returns {Promise}
    */
   start(config) {
-    /* istanbul ignore if */
-    if (typeof config === 'undefined') {
-      config = {}; // eslint-disable-line no-param-reassign
+    if (!server) {
+      server = new CoinstacServer(typeof config === 'object' ? config : {});
     }
 
-    // init.
-    // do all seed ops after pool init s.t. dbs are-likely-synced across the network
-    return dbRegistryService.init(config)
-      .then(() => computationRegistryService.init())
-      .then(() => seedConsortia(config))
-      .then(() => computationsSyncer.sync())
-      .then(() => remotePRPService.init())
-      .then(() => this.exposeInternals())
-      .then(() => this.pool);
+    return server.start();
   },
 
   /**
-   * stop the server. teardown internal services.
+   * Stop the server.
+   *
    * @returns {Promise}
    */
   stop() {
-    computationRegistryService.teardown();
-    dbRegistryService.teardown();
-    return remotePRPService.teardown();
+    if (server) {
+      return server.stop().then(() => {
+        server = undefined;
+      });
+    }
+
+    return Promise.resolve();
   },
 };
 </code></pre>

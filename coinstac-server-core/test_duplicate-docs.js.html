@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>test/duplicate-docs.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CoinstacServer.html">CoinstacServer</a><ul class='methods'><li data-type='method'><a href="CoinstacServer.html#start">start</a></li><li data-type='method'><a href="CoinstacServer.html#stop">stop</a></li></ul></li><li><a href="src_coinstac-server.html">src/coinstac-server</a></li></ul><h3>Modules</h3><ul><li><a href="module-service_computation-registry.html">service/computation-registry</a><ul class='methods'><li data-type='method'><a href="module-service_computation-registry.html#.get">get</a></li><li data-type='method'><a href="module-service_computation-registry.html#.getComputationsPath">getComputationsPath</a></li><li data-type='method'><a href="module-service_computation-registry.html#.init">init</a></li><li data-type='method'><a href="module-service_computation-registry.html#.teardown">teardown</a></li><li data-type='method'><a href="module-service_computation-registry.html#.upsertComputationsDir">upsertComputationsDir</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#coinstacCommon">coinstacCommon</a></li><li><a href="global.html#errorHandler">errorHandler</a></li><li><a href="global.html#failStderr">failStderr</a></li><li><a href="global.html#getComputationFinder">getComputationFinder</a></li><li><a href="global.html#sync">sync</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">test/duplicate-docs.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+
+/**
+ * Integration test to ensure computation documents aren't duplicated.
+ *
+ * Strategy:
+ *
+ * 1. Spin up faux CouchDB using pouchdb-server
+ * 2. Seed with stubbed computation docs, some of which need to be deleted
+ * 3. Initialize server by calling `CoinstacServer#start`
+ * 4. Shut down server
+ * 5. Get database state
+ * 6. Assert database docs are as expected
+ *
+ * {@link https://github.com/MRN-Code/coinstac/issues/100}
+ */
+
+const coinstacCommon = require('coinstac-common');
+const coinstacComputationRegistry = require('coinstac-computation-registry');
+const omit = require('lodash/omit');
+const partialRight = require('lodash/partialRight');
+const pify = require('pify');
+const server = require('../src/index.js');
+const sinon = require('sinon');
+const sortBy = require('lodash/sortBy');
+const spawnPouchDBServer = require('spawn-pouchdb-server');
+const tape = require('tape');
+
+const blackList = [{
+  name: 'blacker-than-black',
+  url: 'https://github.com/MRN-Code/blacker-than-black',
+  version: '1.0.0',
+}, {
+  name: 'goes-to-eleven',
+  url: 'https://github.com/MRN-Code/goes-to-eleven',
+  version: '11.0.0',
+}];
+const port = 5985;
+const Pouchy = coinstacCommon.services.dbRegistry.DBRegistry.Pouchy;
+const whiteList = [{
+  name: 'smell-the-glove',
+  url: 'https://github.com/MRN-Code/smell-the-glove',
+  version: '1.0.0',
+}, {
+  name: 'smell-the-glove',
+  url: 'https://github.com/MRN-Code/smell-the-glove',
+  version: '2.0.0',
+}, {
+  name: 'the-sun-never-sweats',
+  url: 'https://github.com/MRN-Code/the-sun-never-sweats',
+  version: '3.0.0',
+}, {
+  name: 'the-sun-never-sweats',
+  url: 'https://github.com/MRN-Code/the-sun-never-sweats',
+  version: '3.1.0',
+}];
+
+let allStub;
+let pouchDBServer;
+
+function getDb(sync = 'out') {
+  return new Pouchy({
+    sync,
+    url: `http://localhost:${port}/computations`,
+  });
+}
+
+tape('setup', (t) => {
+  t.plan(2);
+
+  allStub = sinon
+    .stub(
+      coinstacComputationRegistry.ComputationRegistry.prototype,
+      'all'
+    )
+    // Mock `DecentralizedComputation`s
+    .returns(Promise.resolve(whiteList.map(item => Object.assign({}, item, {
+      getComputationDocument() {
+        return item;
+      },
+    }))));
+
+  return pify(spawnPouchDBServer)({
+    backend: false,
+    config: {
+      file: false,
+    },
+    log: {
+      file: false,
+    },
+    port,
+    verbose: false,
+  })
+    .then((pouchServer) => {
+      pouchDBServer = pouchServer;
+      t.pass(`PouchDB server started at localhost:${port}`);
+
+      // Seed in-memory db
+      return getDb().bulkDocs(blackList.concat(whiteList[3]));
+    })
+    .then((responses) => {
+      t.notOk(
+        responses.filter(r => r.error).length,
+        'stubs computation database'
+      );
+    })
+    .then(t.end);
+});
+
+tape('test', (t) => {
+  t.plan(2);
+
+  server.start({
+    dbUrl: 'http://localhost:5985',
+    inMemory: true,
+  })
+    .then(() => server.stop())
+    .then(() => {
+      t.pass('server stopped');
+
+      return getDb('in').all();
+    })
+    .then((docs) => {
+      t.deepEqual(
+        sortBy(
+          docs.map(partialRight(omit, ['_id', '_rev'])),
+          ['name', 'version']
+        ),
+        sortBy(whiteList, ['name', 'version']),
+        'doesn\'t create duplicate computation documents'
+      );
+    })
+    .catch(t.end);
+});
+
+tape('teardown', (t) => {
+  t.plan(1);
+
+  allStub.restore();
+  pouchDBServer.stop(() => t.pass('PouchDB server exited'));
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
