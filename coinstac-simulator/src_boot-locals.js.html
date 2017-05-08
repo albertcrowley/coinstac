@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>boot-locals.js - Documentation</title>
+    <title>src/boot-locals.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -23,12 +23,13 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-simulator.html">simulator</a></li><li><a href="module-src_boot-locals.html">src/boot-locals</a></li></ul><h3>Global</h3><ul><li><a href="global.html#createUserData">createUserData</a></li><li><a href="global.html#formatter">formatter</a></li><li><a href="global.html#getChildProcessLogger">getChildProcessLogger</a></li><li><a href="global.html#getReadyLocalProcess">getReadyLocalProcess</a></li><li><a href="global.html#getStdDataHandler">getStdDataHandler</a></li><li><a href="global.html#loadFiles">loadFiles</a></li><li><a href="global.html#run">run</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="Get%2520an%2520object%2520that%2520behaves%2520like%2520%2560ComputationRegistry%2560%2520but%2520contains%2520a%2520stubbed%250Acomputation%2520via%2520the%2520%2560computationPath%2560%2520paramter.module_.html">Get an object that behaves like `ComputationRegistry` but contains a stubbed
+computation via the `computationPath` paramter.</a></li><li><a href="module-simulator.html">simulator</a></li><li><a href="module-src_boot-locals.html">src/boot-locals</a></li></ul><h3>Global</h3><ul><li><a href="global.html#createUserData">createUserData</a></li><li><a href="global.html#formatter">formatter</a></li><li><a href="global.html#getChildProcessLogger">getChildProcessLogger</a></li><li><a href="global.html#getReadyLocalProcess">getReadyLocalProcess</a></li><li><a href="global.html#getStdDataHandler">getStdDataHandler</a></li><li><a href="global.html#loadFiles">loadFiles</a></li><li><a href="global.html#run">run</a></li></ul>
 </nav>
 
 <div id="main">
     
-    <h1 class="page-title">boot-locals.js</h1>
+    <h1 class="page-title">src/boot-locals.js</h1>
     
 
     
@@ -67,6 +68,7 @@ function getReadyLocalProcess({
   return new Promise((resolve, reject) => {
     const localProcess = cp.fork(path.join(__dirname, 'local.js'), {
       cwd: path.dirname(computationPath),
+      execArgv: process.execArgv.filter(arg => !arg.includes('--debug')),
       silent: true,
     });
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>index.js - Documentation</title>
+    <title>src/index.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -23,12 +23,13 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-simulator.html">simulator</a></li><li><a href="module-src_boot-locals.html">src/boot-locals</a></li></ul><h3>Global</h3><ul><li><a href="global.html#createUserData">createUserData</a></li><li><a href="global.html#formatter">formatter</a></li><li><a href="global.html#getChildProcessLogger">getChildProcessLogger</a></li><li><a href="global.html#getReadyLocalProcess">getReadyLocalProcess</a></li><li><a href="global.html#getStdDataHandler">getStdDataHandler</a></li><li><a href="global.html#loadFiles">loadFiles</a></li><li><a href="global.html#run">run</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="Get%2520an%2520object%2520that%2520behaves%2520like%2520%2560ComputationRegistry%2560%2520but%2520contains%2520a%2520stubbed%250Acomputation%2520via%2520the%2520%2560computationPath%2560%2520paramter.module_.html">Get an object that behaves like `ComputationRegistry` but contains a stubbed
+computation via the `computationPath` paramter.</a></li><li><a href="module-simulator.html">simulator</a></li><li><a href="module-src_boot-locals.html">src/boot-locals</a></li></ul><h3>Global</h3><ul><li><a href="global.html#createUserData">createUserData</a></li><li><a href="global.html#formatter">formatter</a></li><li><a href="global.html#getChildProcessLogger">getChildProcessLogger</a></li><li><a href="global.html#getReadyLocalProcess">getReadyLocalProcess</a></li><li><a href="global.html#getStdDataHandler">getStdDataHandler</a></li><li><a href="global.html#loadFiles">loadFiles</a></li><li><a href="global.html#run">run</a></li></ul>
 </nav>
 
 <div id="main">
     
-    <h1 class="page-title">index.js</h1>
+    <h1 class="page-title">src/index.js</h1>
     
 
     
@@ -45,10 +46,9 @@
  */
 require('./utils/handle-errors');
 
-const { fill, flatten, noop, times, uniqueId, values } = require('lodash');
+const { fill, flatten, omit, noop, times, uniqueId, values } = require('lodash');
 const bluebird = require('bluebird');
 const fs = require('fs');
-const isPromise = require('is-promise');
 const path = require('path');
 
 const bootLocals = require('./boot-locals');
@@ -93,27 +93,21 @@ const exportList = {
 
         /* eslint-disable global-require */
         const declaration = require(declarationPath);
-        /* eslint-ensable global-require */
+        /* eslint-enable global-require */
 
         // Validate declaration's shape
-        if (!(declaration instanceof Object)) {
-          throw new Error(`Expected declaration ${declarationPath} to be an object`);
-        } else if (
+        if (
           !('computationPath' in declaration) ||
           typeof declaration.computationPath !== 'string'
         ) {
           throw new Error(
             `Expected declaration ${declarationPath} to have a 'computationPath' property`
           );
-        } else if (
-          !('local' in declaration) || !Array.isArray(declaration.local)
-        ) {
+        } else if (!(declaration instanceof Object)) {
+          throw new Error(`Expected declaration ${declarationPath} to be an object`);
+        } else if (!Array.isArray(declaration.local)) {
           throw new Error(
             `Expected declaration ${declarationPath} to have a 'local' array`
-          );
-        } else if (!declaration.local.length) {
-          throw new Error(
-            `Expected declaration ${declarationPath} to have items in 'local' array`
           );
         } else if (
           'remote' in declaration &amp;&amp; !(declaration.remote instanceof Object)
@@ -126,28 +120,50 @@ const exportList = {
         // Support empty arrays created by `Array(&lt;number>)`
         const local = declaration.local.every(l => typeof l === 'undefined') ?
           times(declaration.local.length, () => ({})) :
-          Promise.all(declaration.local.map(l => {
-            return l instanceof Object &amp;&amp; values(l).some(isPromise) ?
-              bluebird.props(l) :
-              l;
-          }));
+          Promise.all(declaration.local.map((item) => (
+            item instanceof Object ? bluebird.props(item) : item
+          )));
 
         const remote = declaration.remote ?
           bluebird.props(declaration.remote) :
           undefined;
 
+        // Pass local and remote immediately to handle rejections
         return Promise.all([
-          path.resolve(
+          local,
+          remote,
+          omit(declaration, ['local', 'remote']),
+        ]);
+      })
+      .then(([local, remote, declaration]) => {
+        if (!local.length) {
+          throw new Error(
+            `Expected declaration ${declarationPath} to have items in 'local' array`
+          );
+        } else if (!Array.isArray(declaration.__ACTIVE_COMPUTATION_INPUTS__)) {
+          /**
+           * @todo Don't require computation inputs.
+           *
+           * {@link https://github.com/MRN-Code/coinstac/issues/161}
+           */
+          /* eslint-disable max-len */
+          throw new Error(
+            `Expected declaration ${declarationPath} to contain '__ACTIVE_COMPUTATION_INPUTS__' array`
+          );
+          /* eslint-enable max-len */
+        }
+
+
+        return {
+          activeComputationInputs: declaration.__ACTIVE_COMPUTATION_INPUTS__,
+          computationPath: path.resolve(
             path.dirname(require.resolve(declarationPath)),
             declaration.computationPath
           ),
           local,
           remote,
-          !!declaration.verbose,
-        ]);
-      })
-      .then(([computationPath, local, remote, verbose]) => {
-        return { computationPath, local, remote, verbose };
+          verbose: !!declaration.verbose,
+        };
       });
   },
 
@@ -173,7 +189,7 @@ const exportList = {
    */
   run(declPath) {
     return this.getDeclaration(declPath)
-      .then(declaration => {
+      .then((declaration) => {
         const cwd = process.cwd();
         const usernames = this.getUsernames(declaration.local.length);
 
@@ -184,10 +200,7 @@ const exportList = {
           cwd,
           declaration,
           usernames,
-          dbServer.setup({
-            computationPath: declaration.computationPath,
-            usernames,
-          }),
+          dbServer.setup(),
         ]);
       })
       .then(([cwd, declaration, usernames]) => {
@@ -197,8 +210,10 @@ const exportList = {
           declaration,
           usernames,
           bootRemote.run({
+            activeComputationInputs: declaration.activeComputationInputs,
             computationPath: declaration.computationPath,
             data: declaration.remote,
+            usernames,
             verbose: declaration.verbose,
           }),
         ]);
@@ -251,8 +266,12 @@ const exportList = {
             });
           })
         )
-        .then(dbServer.teardown)
-        .then(() => resolve())
+        .then(dbServer.getRemoteResult)
+        .then(remoteResult => Promise.all([
+          remoteResult,
+          dbServer.teardown(),
+        ]))
+        .then(([remoteResult]) => resolve(remoteResult))
         .catch((err) => reject(err));
       });
     });

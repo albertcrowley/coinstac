@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>db-server.js - Documentation</title>
+    <title>src/db-server.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -23,12 +23,13 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-simulator.html">simulator</a></li><li><a href="module-src_boot-locals.html">src/boot-locals</a></li></ul><h3>Global</h3><ul><li><a href="global.html#createUserData">createUserData</a></li><li><a href="global.html#formatter">formatter</a></li><li><a href="global.html#getChildProcessLogger">getChildProcessLogger</a></li><li><a href="global.html#getReadyLocalProcess">getReadyLocalProcess</a></li><li><a href="global.html#getStdDataHandler">getStdDataHandler</a></li><li><a href="global.html#loadFiles">loadFiles</a></li><li><a href="global.html#run">run</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="Get%2520an%2520object%2520that%2520behaves%2520like%2520%2560ComputationRegistry%2560%2520but%2520contains%2520a%2520stubbed%250Acomputation%2520via%2520the%2520%2560computationPath%2560%2520paramter.module_.html">Get an object that behaves like `ComputationRegistry` but contains a stubbed
+computation via the `computationPath` paramter.</a></li><li><a href="module-simulator.html">simulator</a></li><li><a href="module-src_boot-locals.html">src/boot-locals</a></li></ul><h3>Global</h3><ul><li><a href="global.html#createUserData">createUserData</a></li><li><a href="global.html#formatter">formatter</a></li><li><a href="global.html#getChildProcessLogger">getChildProcessLogger</a></li><li><a href="global.html#getReadyLocalProcess">getReadyLocalProcess</a></li><li><a href="global.html#getStdDataHandler">getStdDataHandler</a></li><li><a href="global.html#loadFiles">loadFiles</a></li><li><a href="global.html#run">run</a></li></ul>
 </nav>
 
 <div id="main">
     
-    <h1 class="page-title">db-server.js</h1>
+    <h1 class="page-title">src/db-server.js</h1>
     
 
     
@@ -47,15 +48,12 @@
 
 require('./utils/handle-errors');
 
+const axios = require('axios');
 const cloneDeep = require('lodash/cloneDeep');
-const common = require('coinstac-common');
 const config = require('./utils/config');
 const { logger } = require('./utils/logging');
 const pdbs = require('spawn-pouchdb-server');
-const Pouchy = require('pouchy');
-const url = require('url');
 
-const Consortium = common.models.Consortium;
 const pouchDBServerConfig = config['pouch-db-server'];
 
 /**
@@ -65,20 +63,33 @@ const pouchDBServerConfig = config['pouch-db-server'];
  */
 let server;
 
-function addDocument(pathname, doc) {
-  const dbUrl = url.format({
-    hostname: 'localhost',
-    pathname,
-    port: pouchDBServerConfig.port,
-    protocol: 'http',
-  });
+/**
+ * Get remote result.
+ *
+ * Get the last remote result output from the current computation.
+ *
+ * @returns {Promise&lt;Object>}
+ */
+function getRemoteResult() {
+  const host = `http://localhost:${pouchDBServerConfig.port}`;
 
-  const db = new Pouchy({
-    url: dbUrl,
-    sync: 'out',
-  });
+  return axios.get(`${host}/_all_dbs`)
+    .then((result) => {
+      const remoteDb = result.data.find(db => db.includes('remote-consortium-'));
 
-  return db.save(doc);
+      if (!remoteDb) {
+        throw new Error('Remote consortium database not found');
+      }
+
+      return axios.get(`${host}/${remoteDb}/_all_docs?include_docs=true`);
+    })
+    .then((result) => {
+      if (!result.data.rows.length) {
+        throw new Error('No remote consortium results');
+      }
+
+      return result.data.rows[0].doc.data;
+    });
 }
 
 /**
@@ -93,7 +104,7 @@ function addDocument(pathname, doc) {
  * @param {string[]} params.usernames
  * @returns {Promise}
  */
-function setup({ computationPath, usernames }) {
+function setup() {
   if (server) {
     return Promise.reject(new Error('Server already instantiated'));
   }
@@ -114,33 +125,6 @@ function setup({ computationPath, usernames }) {
       logger.info(
         `pouchdb-server running on http://localhost:${pouchDBServerConfig.port}`
       );
-      const defaultConsortium = new Consortium({
-        _id: `testconsortiumid${Date.now()}`,
-        activeComputationInputs: [[]],
-        description: 'test-default-consortium',
-        label: 'test-default-consortium',
-        owners: usernames,
-        users: usernames,
-      });
-      /* eslint-disable global-require */
-      const decentralizedComputation = require(computationPath);
-      /* eslint-enable global-require */
-      const computationDoc = {
-        _id: 'testcomputationid',
-        name: decentralizedComputation.name,
-        version: decentralizedComputation.version,
-      };
-
-      return Promise.all([
-        addDocument('consortia', defaultConsortium.serialize()),
-        addDocument('computations', computationDoc),
-      ]);
-    })
-    .then(responses => {
-      logger.info('Seeded database', {
-        consortium: responses[0]._id,
-        computation: responses[1].name,
-      });
 
       return server;
     });
@@ -169,6 +153,7 @@ function teardown() {
 }
 
 module.exports = {
+  getRemoteResult,
   setup,
   teardown,
 };

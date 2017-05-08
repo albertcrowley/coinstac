@@ -23,7 +23,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CoinstacServer.html">CoinstacServer</a><ul class='methods'><li data-type='method'><a href="CoinstacServer.html#start">start</a></li><li data-type='method'><a href="CoinstacServer.html#stop">stop</a></li></ul></li><li><a href="src_coinstac-server.html">src/coinstac-server</a></li></ul><h3>Modules</h3><ul><li><a href="module-service_computation-registry.html">service/computation-registry</a><ul class='methods'><li data-type='method'><a href="module-service_computation-registry.html#.get">get</a></li><li data-type='method'><a href="module-service_computation-registry.html#.getComputationsPath">getComputationsPath</a></li><li data-type='method'><a href="module-service_computation-registry.html#.init">init</a></li><li data-type='method'><a href="module-service_computation-registry.html#.teardown">teardown</a></li><li data-type='method'><a href="module-service_computation-registry.html#.upsertComputationsDir">upsertComputationsDir</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#coinstacCommon">coinstacCommon</a></li><li><a href="global.html#errorHandler">errorHandler</a></li><li><a href="global.html#failStderr">failStderr</a></li><li><a href="global.html#getComputationFinder">getComputationFinder</a></li><li><a href="global.html#sync">sync</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CoinstacServer.html">CoinstacServer</a><ul class='methods'><li data-type='method'><a href="CoinstacServer.html#start">start</a></li><li data-type='method'><a href="CoinstacServer.html#stop">stop</a></li></ul></li><li><a href="src_coinstac-server.html">src/coinstac-server</a></li></ul><h3>Modules</h3><ul><li><a href="module-service_computation-registry.html">service/computation-registry</a><ul class='methods'><li data-type='method'><a href="module-service_computation-registry.html#.get">get</a></li><li data-type='method'><a href="module-service_computation-registry.html#.getComputationsPath">getComputationsPath</a></li><li data-type='method'><a href="module-service_computation-registry.html#.init">init</a></li><li data-type='method'><a href="module-service_computation-registry.html#.teardown">teardown</a></li><li data-type='method'><a href="module-service_computation-registry.html#.upsertComputationsDir">upsertComputationsDir</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#coinstacCommon">coinstacCommon</a></li><li><a href="global.html#dbmap">dbmap</a></li><li><a href="global.html#errorHandler">errorHandler</a></li><li><a href="global.html#failStderr">failStderr</a></li><li><a href="global.html#getComputationFinder">getComputationFinder</a></li><li><a href="global.html#sync">sync</a></li></ul>
 </nav>
 
 <div id="main">
@@ -52,8 +52,29 @@ const path = require('path');
 const pify = require('pify');
 const pouchDbAdapterLevelDB = require('pouchdb-adapter-leveldb');
 const pouchDBAdapterMemory = require('pouchdb-adapter-memory');
+const touch = require('touch');
 const url = require('url');
-const dbmap = require('/coins/config/dbmap.json');
+const winston = require('winston');
+
+/**
+ * @todo Don't depend on dbmap.json for secrets.
+ *
+ * {@link https://github.com/MRN-Code/coinstac/issues/163}
+ */
+let dbmap;
+
+try {
+  /* eslint-disable import/no-unresolved,global-require */
+  dbmap = require('/coins/config/dbmap.json');
+  /* eslint-enable import/no-unresolved,global-require */
+} catch (error) {
+  dbmap = {
+    coinstac: {
+      user: '',
+      password: '',
+    },
+  };
+}
 
 const BASE_PATH = path.join(os.tmpdir(), 'coinstac-server-core');
 const DB_REGISTRY_DEFAULTS = {
@@ -93,6 +114,8 @@ class CoinstacServer {
    * @param {string} [config.dbUrl] Database URL.
    * @param {boolean} [config.inMemory=false] Use an in-memory database using
    * instead of writing to disk.
+   * @param {string} [config.logFile] Full path to a log file. No log files
+   * will be written if this isn not set.
    * @param {string} [config.logLevel=info] Logger level for winston's console
    * transport.
    */
@@ -109,6 +132,15 @@ class CoinstacServer {
 
     this.logger = logger;
     this.logger.level = this.config.logLevel || 'info';
+
+    if (this.config.logFile) {
+      // Ensure process can write to log file
+      touch.sync(this.config.logFile);
+
+      this.logger.add(winston.transports.File, {
+        filename: this.config.logFile,
+      });
+    }
   }
 
   /**
@@ -304,19 +336,27 @@ class CoinstacServer {
           computationRegistry.all(),
         ]);
       })
-      .then(([computationDatabase, decentralizedComputations]) => Promise.all([
-        this.getRemotePipelineRunnerPool(),
-        this.maybeSeedConsortia(),
+      .then(([computationDatabase, decentralizedComputations]) =>
         computationsDatabaseSyncer.sync(
           computationDatabase,
           decentralizedComputations
-        ),
-      ]))
-      .then(([remotePipelineRunnerPool]) => {
+        )
+      )
+      .then(() => this.getRemotePipelineRunnerPool())
+      .then((remotePipelineRunnerPool) => {
         this.remotePipelineRunnerPool = remotePipelineRunnerPool;
+        return Promise.all([
+          remotePipelineRunnerPool,
+          this.maybeSeedConsortia(),
+        ]);
+      })
+      .then(([remotePipelineRunnerPool]) => {
         this.logger.info('Server ready');
         return remotePipelineRunnerPool;
-      });
+      })
+      .catch((error) => this.stop().then(() => {
+        throw error;
+      }));
   }
 
   /**
