@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Global - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
@@ -23,7 +24,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Bouncer.html">Bouncer</a><ul class='methods'><li data-type='method'><a href="Bouncer.html#mapUri">mapUri</a></li><li data-type='method'><a href="Bouncer.html#testExceptionRoute">testExceptionRoute</a></li><li data-type='method'><a href="Bouncer.html#testPathRegExp">testPathRegExp</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#Consortium">Consortium</a></li><li><a href="global.html#factory">factory</a></li><li><a href="global.html#getConsortium">getConsortium</a></li><li><a href="global.html#getConsortiumIdFromRequest">getConsortiumIdFromRequest</a></li><li><a href="global.html#getDocumentIdFromRequest">getDocumentIdFromRequest</a></li><li><a href="global.html#getMockFn">getMockFn</a></li><li><a href="global.html#getPort">getPort</a></li><li><a href="global.html#getTargetUrl">getTargetUrl</a></li><li><a href="global.html#getUnauthorizedUrl">getUnauthorizedUrl</a></li><li><a href="global.html#mockAxiosResponse">mockAxiosResponse</a></li></ul>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Bouncer.html">Bouncer</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Bouncer.html#mapUri">mapUri</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Bouncer.html#testExceptionRoute">testExceptionRoute</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Bouncer.html#testPathRegExp">testPathRegExp</a></span></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#factory">factory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getConsortium">getConsortium</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getConsortiumIdFromRequest">getConsortiumIdFromRequest</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getDocumentIdFromRequest">getDocumentIdFromRequest</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getMockFn">getMockFn</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getPort">getPort</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getTargetUrl">getTargetUrl</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getUnauthorizedUrl">getUnauthorizedUrl</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#mockAxiosResponse">mockAxiosResponse</a></span></li>
 </nav>
 
 <div id="main">
@@ -106,23 +107,25 @@
     
 
     
-        <h3 class="subsection-title">Members</h3>
+
+    
+        <h3 class="subsection-title">Methods</h3>
 
         
             
-<h4 class="name" id="Consortium"><span class="type-signature">(constant) </span>Consortium<span class="type-signature"></span></h4>
+<div class="section-method">
 
+    
+
+    <h4 class="name" id="factory"><span class="type-signature"></span>factory<span class="signature">(config, postConstructionProps)</span><span class="type-signature"> &rarr; {<a href="Bouncer.html">Bouncer</a>}</span></h4>
+
+    
 
 
 
 <div class="description">
-    <p>The results of running this file indicate that there is a <em>relatively</em>
-large penalty for instantiating coinstac-common models compared to operating
-on plain objects. Note that this is <em>relatively</em> large, but <em>absolutely</em>
-small: less than 1ms per operation...</p>
+    <p>create a bouncer instance</p>
 </div>
-
-
 
 
 
@@ -157,7 +160,7 @@ small: less than 1ms per operation...</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_model-benchmark.js.html">src/model-benchmark.js</a>, <a href="src_model-benchmark.js.html#line10">line 10</a>
+        <a href="test_bouncer.js.html">test/bouncer.js</a>, <a href="test_bouncer.js.html#line20">line 20</a>
     </li></ul></dd>
     
 
@@ -167,32 +170,6 @@ small: less than 1ms per operation...</p>
 
     
 </dl>
-
-
-
-
-
-
-        
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            
-
-    
-
-    <h4 class="name" id="factory"><span class="type-signature"></span>factory<span class="signature">(config, postConstructionProps)</span><span class="type-signature"> &rarr; {<a href="Bouncer.html">Bouncer</a>}</span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>create a bouncer instance</p>
-</div>
 
 
 
@@ -233,7 +210,7 @@ small: less than 1ms per operation...</p>
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type"><code>object</code></span>
 
 
             
@@ -243,7 +220,10 @@ small: less than 1ms per operation...</p>
 
             
 
-            <td class="description last"><p>configuration options</p></td>
+            <td class="description last">
+                <p>configuration options</p>
+                
+            </td>
         </tr>
 
     
@@ -256,7 +236,7 @@ small: less than 1ms per operation...</p>
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type"><code>object</code></span>
 
 
             
@@ -266,7 +246,10 @@ small: less than 1ms per operation...</p>
 
             
 
-            <td class="description last"><p>load into instance post construction</p></td>
+            <td class="description last">
+                <p>load into instance post construction</p>
+                
+            </td>
         </tr>
 
     
@@ -278,45 +261,6 @@ small: less than 1ms per operation...</p>
 
 
 
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="test_bouncer.js.html">test/bouncer.js</a>, <a href="test_bouncer.js.html#line21">line 21</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
 
 
 
@@ -325,38 +269,37 @@ small: less than 1ms per operation...</p>
 
 
 
-
-
-
-
-
+<div class="section-returns">
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    <p>Bouncer object</p>
-</div>
-
-
 
 <dl class="param-type">
     <dt>
-        Type
+        Type:
     </dt>
     <dd>
         
-<span class="param-type"><a href="Bouncer.html">Bouncer</a></span>
+<span class="param-type"><code><a href="Bouncer.html">Bouncer</a></code></span>
 
 
     </dd>
 </dl>
 
+
+<div class="param-desc">
+    <p>Bouncer object</p>
+</div>
+
     
+</div>
 
 
 
+</div>
         
             
+<div class="section-method">
 
     
 
@@ -369,86 +312,6 @@ small: less than 1ms per operation...</p>
 <div class="description">
     <p>get consortium metadata from datastore</p>
 </div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>targetUrl</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>consortiumId</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>hapi request object</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
 
 
 
@@ -502,58 +365,6 @@ small: less than 1ms per operation...</p>
 
 
 
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>resolves to consortium object</p>
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="getConsortiumIdFromRequest"><span class="type-signature"></span>getConsortiumIdFromRequest<span class="signature">(request)</span><span class="type-signature"> &rarr; {string}</span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>derive consortium ID from request URL</p>
-</div>
-
-
-
-
-
-
-
-
-
     <h5>Parameters:</h5>
     
 
@@ -579,13 +390,13 @@ small: less than 1ms per operation...</p>
 
         <tr>
             
-                <td class="name"><code>request</code></td>
+                <td class="name"><code>targetUrl</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type"><code>string</code></span>
 
 
             
@@ -595,13 +406,98 @@ small: less than 1ms per operation...</p>
 
             
 
-            <td class="description last"><p>hapi request object</p></td>
+            <td class="description last">
+                
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>consortiumId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>object</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>hapi request object</p>
+                
+            </td>
         </tr>
 
     
     </tbody>
 </table>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+<dl class="param-type">
+    <dt>
+        Type:
+    </dt>
+    <dd>
+        
+<span class="param-type"><code>Promise</code></span>
+
+
+    </dd>
+</dl>
+
+
+<div class="param-desc">
+    <p>resolves to consortium object</p>
+</div>
+
+    
+</div>
+
+
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id="getConsortiumIdFromRequest"><span class="type-signature"></span>getConsortiumIdFromRequest<span class="signature">(request)</span><span class="type-signature"> &rarr; {string}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>derive consortium ID from request URL</p>
+</div>
 
 
 
@@ -655,58 +551,6 @@ small: less than 1ms per operation...</p>
 
 
 
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>consortiumId</p>
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="getDocumentIdFromRequest"><span class="type-signature"></span>getDocumentIdFromRequest<span class="signature">(request)</span><span class="type-signature"> &rarr; {string}</span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>derive document ID from request URL</p>
-</div>
-
-
-
-
-
-
-
-
-
     <h5>Parameters:</h5>
     
 
@@ -738,7 +582,7 @@ small: less than 1ms per operation...</p>
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type"><code>object</code></span>
 
 
             
@@ -748,13 +592,72 @@ small: less than 1ms per operation...</p>
 
             
 
-            <td class="description last"><p>hapi request object</p></td>
+            <td class="description last">
+                <p>hapi request object</p>
+                
+            </td>
         </tr>
 
     
     </tbody>
 </table>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+<dl class="param-type">
+    <dt>
+        Type:
+    </dt>
+    <dd>
+        
+<span class="param-type"><code>string</code></span>
+
+
+    </dd>
+</dl>
+
+
+<div class="param-desc">
+    <p>consortiumId</p>
+</div>
+
+    
+</div>
+
+
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id="getDocumentIdFromRequest"><span class="type-signature"></span>getDocumentIdFromRequest<span class="signature">(request)</span><span class="type-signature"> &rarr; {string}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>derive document ID from request URL</p>
+</div>
 
 
 
@@ -808,37 +711,101 @@ small: less than 1ms per operation...</p>
 
 
 
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>request</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>object</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>hapi request object</p>
+                
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    <p>document ID</p>
-</div>
-
-
 
 <dl class="param-type">
     <dt>
-        Type
+        Type:
     </dt>
     <dd>
         
-<span class="param-type">string</span>
+<span class="param-type"><code>string</code></span>
 
 
     </dd>
 </dl>
 
+
+<div class="param-desc">
+    <p>document ID</p>
+</div>
+
     
+</div>
 
 
 
+</div>
         
             
+<div class="section-method">
 
     
 
@@ -851,6 +818,50 @@ small: less than 1ms per operation...</p>
 <div class="description">
     <p>get a mock function / spy</p>
 </div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="test_bouncer.js.html">test/bouncer.js</a>, <a href="test_bouncer.js.html#line32">line 32</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
 
 
 
@@ -891,7 +902,7 @@ small: less than 1ms per operation...</p>
             <td class="type">
             
                 
-<span class="param-type">function</span>
+<span class="param-type"><code>function</code></span>
 
 
             
@@ -901,7 +912,10 @@ small: less than 1ms per operation...</p>
 
             
 
-            <td class="description last"><p>function to be executed whenever this fn is called</p></td>
+            <td class="description last">
+                <p>function to be executed whenever this fn is called</p>
+                
+            </td>
         </tr>
 
     
@@ -913,45 +927,6 @@ small: less than 1ms per operation...</p>
 
 
 
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="test_bouncer.js.html">test/bouncer.js</a>, <a href="test_bouncer.js.html#line33">line 33</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
 
 
 
@@ -960,38 +935,37 @@ small: less than 1ms per operation...</p>
 
 
 
-
-
-
-
-
+<div class="section-returns">
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    <p>spy function, contains a <code>callCount</code> property</p>
-</div>
-
-
 
 <dl class="param-type">
     <dt>
-        Type
+        Type:
     </dt>
     <dd>
         
-<span class="param-type">function</span>
+<span class="param-type"><code>function</code></span>
 
 
     </dd>
 </dl>
 
+
+<div class="param-desc">
+    <p>spy function, contains a <code>callCount</code> property</p>
+</div>
+
     
+</div>
 
 
 
+</div>
         
             
+<div class="section-method">
 
     
 
@@ -1004,63 +978,6 @@ small: less than 1ms per operation...</p>
 <div class="description">
     <p>get the port of the current request</p>
 </div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>request</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
 
 
 
@@ -1114,54 +1031,6 @@ small: less than 1ms per operation...</p>
 
 
 
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">number</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="getTargetUrl"><span class="type-signature"></span>getTargetUrl<span class="signature">(request)</span><span class="type-signature"> &rarr; {string}</span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>get the url that the request should be forwarded to</p>
-</div>
-
-
-
-
-
-
-
-
-
     <h5>Parameters:</h5>
     
 
@@ -1193,7 +1062,7 @@ small: less than 1ms per operation...</p>
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type"><code>object</code></span>
 
 
             
@@ -1203,13 +1072,68 @@ small: less than 1ms per operation...</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last">
+                
+                
+            </td>
         </tr>
 
     
     </tbody>
 </table>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+<dl class="param-type">
+    <dt>
+        Type:
+    </dt>
+    <dd>
+        
+<span class="param-type"><code>number</code></span>
+
+
+    </dd>
+</dl>
+
+
+    
+</div>
+
+
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id="getTargetUrl"><span class="type-signature"></span>getTargetUrl<span class="signature">(request)</span><span class="type-signature"> &rarr; {string}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>get the url that the request should be forwarded to</p>
+</div>
 
 
 
@@ -1263,54 +1187,6 @@ small: less than 1ms per operation...</p>
 
 
 
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="getUnauthorizedUrl"><span class="type-signature"></span>getUnauthorizedUrl<span class="signature">(request, msg)</span><span class="type-signature"> &rarr; {string}</span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>get URL to forward to if request is unauthorized</p>
-</div>
-
-
-
-
-
-
-
-
-
     <h5>Parameters:</h5>
     
 
@@ -1342,7 +1218,7 @@ small: less than 1ms per operation...</p>
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type"><code>object</code></span>
 
 
             
@@ -1352,36 +1228,68 @@ small: less than 1ms per operation...</p>
 
             
 
-            <td class="description last"><p>the request object being rejected</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>msg</code></td>
-            
-
-            <td class="type">
-            
+            <td class="description last">
                 
-<span class="param-type">string</span>
-
-
-            
+                
             </td>
-
-            
-
-            
-
-            <td class="description last"><p>the rejection message</p></td>
         </tr>
 
     
     </tbody>
 </table>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+<dl class="param-type">
+    <dt>
+        Type:
+    </dt>
+    <dd>
+        
+<span class="param-type"><code>string</code></span>
+
+
+    </dd>
+</dl>
+
+
+    
+</div>
+
+
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id="getUnauthorizedUrl"><span class="type-signature"></span>getUnauthorizedUrl<span class="signature">(request, msg)</span><span class="type-signature"> &rarr; {string}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>get URL to forward to if request is unauthorized</p>
+</div>
 
 
 
@@ -1435,37 +1343,127 @@ small: less than 1ms per operation...</p>
 
 
 
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>request</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>object</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>the request object being rejected</p>
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>msg</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>string</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>the rejection message</p>
+                
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    <p>fully formed URL</p>
-</div>
-
-
 
 <dl class="param-type">
     <dt>
-        Type
+        Type:
     </dt>
     <dd>
         
-<span class="param-type">string</span>
+<span class="param-type"><code>string</code></span>
 
 
     </dd>
 </dl>
 
+
+<div class="param-desc">
+    <p>fully formed URL</p>
+</div>
+
     
+</div>
 
 
 
+</div>
         
             
+<div class="section-method">
 
     
 
@@ -1478,6 +1476,50 @@ small: less than 1ms per operation...</p>
 <div class="description">
     <p>Intercept axios responses and return the provided object in <code>response.data</code></p>
 </div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="test_utils.js.html">test/utils.js</a>, <a href="test_utils.js.html#line24">line 24</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
 
 
 
@@ -1518,7 +1560,7 @@ small: less than 1ms per operation...</p>
             <td class="type">
             
                 
-<span class="param-type">*</span>
+<span class="param-type"><code>*</code></span>
 
 
             
@@ -1528,7 +1570,10 @@ small: less than 1ms per operation...</p>
 
             
 
-            <td class="description last"><p>object to respond with</p></td>
+            <td class="description last">
+                <p>object to respond with</p>
+                
+            </td>
         </tr>
 
     
@@ -1540,45 +1585,6 @@ small: less than 1ms per operation...</p>
 
 
 
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="test_utils.js.html">test/utils.js</a>, <a href="test_utils.js.html#line23">line 23</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
 
 
 
@@ -1587,36 +1593,34 @@ small: less than 1ms per operation...</p>
 
 
 
-
-
-
-
-
+<div class="section-returns">
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    <p>function that will remove the interceptor.</p>
-</div>
-
-
 
 <dl class="param-type">
     <dt>
-        Type
+        Type:
     </dt>
     <dd>
         
-<span class="param-type">function</span>
+<span class="param-type"><code>function</code></span>
 
 
     </dd>
 </dl>
 
+
+<div class="param-desc">
+    <p>function that will remove the interceptor.</p>
+</div>
+
     
+</div>
 
 
 
+</div>
         
     
 
@@ -1635,7 +1639,7 @@ small: less than 1ms per operation...</p>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>

@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>scripts/clean-db.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
@@ -23,7 +24,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CoinstacServer.html">CoinstacServer</a><ul class='methods'><li data-type='method'><a href="CoinstacServer.html#start">start</a></li><li data-type='method'><a href="CoinstacServer.html#stop">stop</a></li></ul></li><li><a href="src_coinstac-server.html">src/coinstac-server</a></li></ul><h3>Modules</h3><ul><li><a href="module-service_computation-registry.html">service/computation-registry</a><ul class='methods'><li data-type='method'><a href="module-service_computation-registry.html#.get">get</a></li><li data-type='method'><a href="module-service_computation-registry.html#.getComputationsPath">getComputationsPath</a></li><li data-type='method'><a href="module-service_computation-registry.html#.init">init</a></li><li data-type='method'><a href="module-service_computation-registry.html#.teardown">teardown</a></li><li data-type='method'><a href="module-service_computation-registry.html#.upsertComputationsDir">upsertComputationsDir</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#coinstacCommon">coinstacCommon</a></li><li><a href="global.html#dbmap">dbmap</a></li><li><a href="global.html#errorHandler">errorHandler</a></li><li><a href="global.html#failStderr">failStderr</a></li><li><a href="global.html#getComputationFinder">getComputationFinder</a></li><li><a href="global.html#sync">sync</a></li></ul>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="CoinstacServer.html">CoinstacServer</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="CoinstacServer.html#start">start</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="CoinstacServer.html#stop">stop</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="src_coinstac-server.html">src/coinstac-server</a></span></li><li class="nav-heading">Modules</li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-service_computation-registry.html">service/computation-registry</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-service_computation-registry.html#.get">get</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-service_computation-registry.html#.getComputationsPath">getComputationsPath</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-service_computation-registry.html#.init">init</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-service_computation-registry.html#.teardown">teardown</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-service_computation-registry.html#.upsertComputationsDir">upsertComputationsDir</a></span></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#coinstacCommon">coinstacCommon</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#dbmap">dbmap</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#errorHandler">errorHandler</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#failStderr">failStderr</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getComputationFinder">getComputationFinder</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#sync">sync</a></span></li>
 </nav>
 
 <div id="main">
@@ -39,6 +40,7 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/* eslint-disable no-console */
+
 'use strict';
 
 const async = require('async');
@@ -55,9 +57,9 @@ const url = require('url');
 let dbmap;
 
 try {
-  /* eslint-disable import/no-unresolved,global-require */
+  /* eslint-disable import/no-unresolved,global-require,import/no-absolute-path */
   dbmap = require('/coins/config/dbmap.json');
-  /* eslint-enable import/no-unresolved,global-require */
+  /* eslint-enable import/no-unresolved,global-require,import/no-absolute-path */
 } catch (error) {
   dbmap = {
     coinstac: {
@@ -75,9 +77,9 @@ const urlBase = url.format({
 });
 
 async.parallel([
-  cb1 => {
+  (cb1) => {
     console.log('Removing database dir…');
-    rimraf(CoinstacServer.DB_PATH, error => {
+    rimraf(CoinstacServer.DB_PATH, (error) => {
       if (error) {
         cb1(error);
       } else {
@@ -86,9 +88,9 @@ async.parallel([
       }
     });
   },
-  cb2 => {
+  (cb2) => {
     async.waterfall([
-      cb2a => {
+      (cb2a) => {
         superagent
           .get(`${urlBase}/_all_dbs`)
           .set('Accept', 'application/json')
@@ -119,7 +121,7 @@ async.parallel([
       },
     ], cb2);
   },
-], error => {
+], (error) => {
   if (error) {
     console.error(error);
   }
@@ -137,7 +139,7 @@ async.parallel([
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>

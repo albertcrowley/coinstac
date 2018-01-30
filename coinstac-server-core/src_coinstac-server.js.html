@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>src/coinstac-server.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
@@ -23,7 +24,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CoinstacServer.html">CoinstacServer</a><ul class='methods'><li data-type='method'><a href="CoinstacServer.html#start">start</a></li><li data-type='method'><a href="CoinstacServer.html#stop">stop</a></li></ul></li><li><a href="src_coinstac-server.html">src/coinstac-server</a></li></ul><h3>Modules</h3><ul><li><a href="module-service_computation-registry.html">service/computation-registry</a><ul class='methods'><li data-type='method'><a href="module-service_computation-registry.html#.get">get</a></li><li data-type='method'><a href="module-service_computation-registry.html#.getComputationsPath">getComputationsPath</a></li><li data-type='method'><a href="module-service_computation-registry.html#.init">init</a></li><li data-type='method'><a href="module-service_computation-registry.html#.teardown">teardown</a></li><li data-type='method'><a href="module-service_computation-registry.html#.upsertComputationsDir">upsertComputationsDir</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#coinstacCommon">coinstacCommon</a></li><li><a href="global.html#dbmap">dbmap</a></li><li><a href="global.html#errorHandler">errorHandler</a></li><li><a href="global.html#failStderr">failStderr</a></li><li><a href="global.html#getComputationFinder">getComputationFinder</a></li><li><a href="global.html#sync">sync</a></li></ul>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="CoinstacServer.html">CoinstacServer</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="CoinstacServer.html#start">start</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="CoinstacServer.html#stop">stop</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="src_coinstac-server.html">src/coinstac-server</a></span></li><li class="nav-heading">Modules</li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-service_computation-registry.html">service/computation-registry</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-service_computation-registry.html#.get">get</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-service_computation-registry.html#.getComputationsPath">getComputationsPath</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-service_computation-registry.html#.init">init</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-service_computation-registry.html#.teardown">teardown</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-service_computation-registry.html#.upsertComputationsDir">upsertComputationsDir</a></span></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#coinstacCommon">coinstacCommon</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#dbmap">dbmap</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#errorHandler">errorHandler</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#failStderr">failStderr</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getComputationFinder">getComputationFinder</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#sync">sync</a></span></li>
 </nav>
 
 <div id="main">
@@ -40,59 +41,15 @@
         <article>
             <pre class="prettyprint source linenums"><code>'use strict';
 
-const computationsDatabaseSyncer =
-  require('./services/computations-database-syncer.js');
-const cloneDeep = require('lodash/cloneDeep');
 const coinstacCommon = require('coinstac-common');
-const coinstacComputationRegistry = require('coinstac-computation-registry');
+const ComputationRegistry = require('coinstac-computation-registry');
 const logger = require('./services/logger.js');
-const mkdirp = require('mkdirp');
 const os = require('os');
 const path = require('path');
-const pify = require('pify');
-const pouchDbAdapterLevelDB = require('pouchdb-adapter-leveldb');
-const pouchDBAdapterMemory = require('pouchdb-adapter-memory');
 const touch = require('touch');
-const url = require('url');
 const winston = require('winston');
 
-/**
- * @todo Don't depend on dbmap.json for secrets.
- *
- * {@link https://github.com/MRN-Code/coinstac/issues/163}
- */
-let dbmap;
-
-try {
-  /* eslint-disable import/no-unresolved,global-require */
-  dbmap = require('/coins/config/dbmap.json');
-  /* eslint-enable import/no-unresolved,global-require */
-} catch (error) {
-  dbmap = {
-    coinstac: {
-      user: '',
-      password: '',
-    },
-  };
-}
-
 const BASE_PATH = path.join(os.tmpdir(), 'coinstac-server-core');
-const DB_REGISTRY_DEFAULTS = {
-  isRemote: true,
-  localStores: null,
-  pouchConfig: {},
-  remote: {
-    db: {
-      auth: dbmap.coinstac ? `${dbmap.coinstac.user}:${dbmap.coinstac.password}` : '',
-      protocol: 'http',
-      hostname: 'localhost',
-      port: 5984,
-    },
-  },
-  remoteStoresSyncOut: null,
-  verbose: true,
-};
-const mkdirpAsync = pify(mkdirp);
 
 /**
  * COINSTAC Server.
@@ -126,7 +83,7 @@ class CoinstacServer {
 
     this.config = config;
 
-    this.computationRegistry = null;
+    this.computationRegistry = new ComputationRegistry();
     this.dbRegistry = null;
     this.remotePipelineRunnerPool = null;
 
@@ -141,63 +98,6 @@ class CoinstacServer {
         filename: this.config.logFile,
       });
     }
-  }
-
-  /**
-   * Get configured ComputationRegistry.
-   * @private
-   *
-   * @returns {Promise&lt;ComputationRegistry>}
-   */
-  getComputationRegistry() {
-    this.logger.info('Initializing computation registry...');
-
-    return mkdirpAsync(CoinstacServer.COMPUTATIONS_PATH)
-      .then(() => coinstacComputationRegistry.factory({
-        path: CoinstacServer.COMPUTATIONS_PATH,
-      }))
-      .then((computationRegistry) => {
-        this.logger.info('Computation registry initialized');
-        return computationRegistry;
-      });
-  }
-
-  /**
-   * Get configured DBRegistry.
-   * @private
-   *
-   * @returns {Promise&lt;DBRegistry>}
-   */
-  getDBRegistry() {
-    // Unfortunately necessary for sinon spying
-    const dbRegistryFactory = coinstacCommon.services.dbRegistry;
-    const dbRegistryOptions = cloneDeep(DB_REGISTRY_DEFAULTS);
-
-    this.logger.info('Initializing DB registry...');
-
-    if (this.config.dbUrl) {
-      dbRegistryOptions.remote.db = url.parse(this.config.dbUrl);
-    }
-
-    if (this.config.inMemory) {
-      dbRegistryFactory.DBRegistry.Pouchy.plugin(pouchDBAdapterMemory);
-      dbRegistryOptions.pouchConfig.adapter = 'memory';
-    } else {
-      dbRegistryFactory.DBRegistry.Pouchy.plugin(pouchDbAdapterLevelDB);
-      dbRegistryOptions.pouchConfig.adapter = 'leveldb';
-    }
-
-    dbRegistryOptions.path = CoinstacServer.DB_PATH;
-
-    const factoryProxy = () => {
-      const dbRegistry = dbRegistryFactory(dbRegistryOptions);
-      this.logger.info('DB registry initialized');
-      return dbRegistry;
-    };
-
-    return this.config.inMemory ?
-      Promise.resolve(factoryProxy()) :
-      mkdirpAsync(CoinstacServer.DB_PATH).then(factoryProxy);
   }
 
   /**
@@ -269,7 +169,7 @@ class CoinstacServer {
       },
 
       // TODO: Move error logging to handler?
-      error => {
+      (error) => {
         this.logger.error(
           'RemotePipelineRunnerPool initialization failed',
           error
@@ -326,37 +226,10 @@ class CoinstacServer {
   start() {
     this.logger.info('Starting server...');
 
-    return Promise.all([this.getComputationRegistry(), this.getDBRegistry()])
-      .then(([computationRegistry, dbRegistry]) => {
-        this.computationRegistry = computationRegistry;
-        this.dbRegistry = dbRegistry;
-
-        return Promise.all([
-          coinstacCommon.utils.getSyncedDatabase(dbRegistry, 'computations'),
-          computationRegistry.all(),
-        ]);
-      })
-      .then(([computationDatabase, decentralizedComputations]) =>
-        computationsDatabaseSyncer.sync(
-          computationDatabase,
-          decentralizedComputations
-        )
-      )
-      .then(() => this.getRemotePipelineRunnerPool())
-      .then((remotePipelineRunnerPool) => {
-        this.remotePipelineRunnerPool = remotePipelineRunnerPool;
-        return Promise.all([
-          remotePipelineRunnerPool,
-          this.maybeSeedConsortia(),
-        ]);
-      })
-      .then(([remotePipelineRunnerPool]) => {
-        this.logger.info('Server ready');
-        return remotePipelineRunnerPool;
-      })
-      .catch((error) => this.stop().then(() => {
+    return this.computationRegistry.serverStart()
+      .catch((error) => {
         throw error;
-      }));
+      });
   }
 
   /**
@@ -371,27 +244,6 @@ class CoinstacServer {
 
     if (this.computationRegistry) {
       this.computationRegistry = null;
-    }
-
-    if (this.dbRegistry) {
-      this.logger.info('destroying DBRegistry...');
-      responses.push(this.dbRegistry.destroy());
-      this.dbRegistry = null;
-    }
-
-    if (this.remotePipelineRunnerPool) {
-      this.logger.info('destroying RemotePipelineRunnerPool...');
-
-      if (
-        this.remotePipelineRunnerPool.isInitialized ||
-        this.remotePipelineRunnerPool.isInitializing
-      ) {
-        responses.push(this.remotePipelineRunnerPool.destroy());
-      } else {
-        this.remotePipelineRunnerPool.events.removeAllListeners();
-      }
-
-      this.remotePipelineRunnerPool = null;
     }
 
     return Promise.all(responses);
@@ -425,7 +277,7 @@ module.exports = CoinstacServer;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>

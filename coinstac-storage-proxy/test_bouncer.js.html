@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>test/bouncer.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
@@ -23,7 +24,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Bouncer.html">Bouncer</a><ul class='methods'><li data-type='method'><a href="Bouncer.html#mapUri">mapUri</a></li><li data-type='method'><a href="Bouncer.html#testExceptionRoute">testExceptionRoute</a></li><li data-type='method'><a href="Bouncer.html#testPathRegExp">testPathRegExp</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#Consortium">Consortium</a></li><li><a href="global.html#factory">factory</a></li><li><a href="global.html#getConsortium">getConsortium</a></li><li><a href="global.html#getConsortiumIdFromRequest">getConsortiumIdFromRequest</a></li><li><a href="global.html#getDocumentIdFromRequest">getDocumentIdFromRequest</a></li><li><a href="global.html#getMockFn">getMockFn</a></li><li><a href="global.html#getPort">getPort</a></li><li><a href="global.html#getTargetUrl">getTargetUrl</a></li><li><a href="global.html#getUnauthorizedUrl">getUnauthorizedUrl</a></li><li><a href="global.html#mockAxiosResponse">mockAxiosResponse</a></li></ul>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Bouncer.html">Bouncer</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Bouncer.html#mapUri">mapUri</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Bouncer.html#testExceptionRoute">testExceptionRoute</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Bouncer.html#testPathRegExp">testPathRegExp</a></span></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#factory">factory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getConsortium">getConsortium</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getConsortiumIdFromRequest">getConsortiumIdFromRequest</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getDocumentIdFromRequest">getDocumentIdFromRequest</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getMockFn">getMockFn</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getPort">getPort</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getTargetUrl">getTargetUrl</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getUnauthorizedUrl">getUnauthorizedUrl</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#mockAxiosResponse">mockAxiosResponse</a></span></li>
 </nav>
 
 <div id="main">
@@ -41,12 +42,11 @@
             <pre class="prettyprint source linenums"><code>'use strict';
 
 const tape = require('tape');
-const path = require('path');
-const Bouncer = require(path.join(process.cwd(), 'src', 'bouncer.js'));
+
+const Bouncer = require('../src/bouncer.js');
 const url = require('url');
-const AuthorizationError = require(
-    path.join(process.cwd(), 'src', 'authorization-error.js')
-);
+
+const AuthorizationError = require('../src/authorization-error.js');
 
 const defaultOpts = {
   targetBaseUrl: 'http://localhost:5432',
@@ -72,13 +72,11 @@ const factory = (config, postConstructionProps) => {
  */
 const getMockFn = (fn) => {
   function spy(...args) {
-    spy.callCount++;
+    spy.callCount += 1;
     if (fn) {
       // call callback with current context and args
       return fn.apply(this, args);
     }
-
-    return;
   }
 
   spy.callCount = 0;
@@ -181,7 +179,6 @@ tape('Bouncer: mapUri', (t) => {
           t.equals(mocks.allow.callCount, 1, 'calls allow');
           t.equals(mocks.handleAuthRejection.callCount, 0, 'does not reject');
           t.equals(mocks.testPathRegExp.callCount, 1, 'calls testPathRegExp');
-          return;
         });
   };
 
@@ -203,7 +200,6 @@ tape('Bouncer: mapUri', (t) => {
           t.equals(mocks.valConOwn.callCount, 0, 'does not call valConOwn');
           t.equals(mocks.allow.callCount, 0, 'does not call allow');
           t.equals(mocks.handleAuthRejection.callCount, 1, 'calls reject');
-          return;
         });
   };
 
@@ -649,7 +645,7 @@ tape('Bouncer: unauthorizedRoute', (t) => {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
