@@ -23,9 +23,9 @@ class Table extends Component {
         return titles.map((k) => {
           if (d[k].constructor === Array) {
             d[k] = d[k].map((v) => {
-              v = parseFloat(v).toFixed(5);
+              v = parseFloat(v).toFixed(3);
               if (v > 999 || v < 0.001) {
-                return parseFloat(v).toExponential(5);
+                return v.toExponential(3);
               }
               return v;
             });

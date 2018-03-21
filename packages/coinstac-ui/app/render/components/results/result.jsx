@@ -55,7 +55,7 @@ class Result extends Component {
     const { activeResult } = this.state;
     return (
       <div>
-        <Button className="custom" onClick={BrowserHistory.goBack}>
+        <Button className="back-button" onClick={BrowserHistory.goBack}>
           <Glyphicon glyph="glyphicon glyphicon-arrow-left" />
         </Button>
         {(activeResult && activeResult.results && activeResult.results.type === 'box_plot') &&
