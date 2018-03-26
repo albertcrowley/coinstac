@@ -66,7 +66,7 @@ class CoinstacClient {
     this.pipelineManager = PipelineManager.create({
       mode: 'local',
       clientId: opts.userId,
-      operatingDirectory: path.join(this.appDirectory, opts.userId),
+      operatingDirectory: path.join(this.appDirectory),
       remotePort: opts.pipelineWSServer.port,
       remoteProtocol: opts.pipelineWSServer.protocol,
       remotePathname: opts.pipelineWSServer.pathname,
@@ -259,12 +259,11 @@ class CoinstacClient {
       const unlinkPromises = [];
       for (let i = 0; i < filesArray.length; i += 1) {
         unlinkPromises.push(
-          unlinkAsync(filesArray[i])
+          unlinkAsync(path.resolve(fullPath, filesArray[i]))
         );
       }
       return Promise.all(unlinkPromises);
-    })
-    .catch(console.log); // eslint-disable-line no-console
+    });
   }
 }
 
