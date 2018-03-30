@@ -1,6 +1,7 @@
 table { 
-		width: 50%; 
-		border-collapse: collapse; 
+		width: 100%; 
+		border-collapse: collapse;
+		overflow-x: scroll;
 	}
 	/* Zebra striping */
 	tr:nth-of-type(odd) {  
