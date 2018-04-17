@@ -247,7 +247,6 @@ class ConsortiaList extends Component {
 
     this.props.removeCollectionsFromAssociatedConsortia(this.state.consortiumToDelete, true)
     .then(() => {
-      this.props.removeUserRole(user.id, 'consortia', this.state.consortiumToDelete, 'owner');
       this.props.deleteConsortiumById(this.state.consortiumToDelete);
       this.closeModal();
     });
@@ -460,12 +459,32 @@ const mapStateToProps = ({ auth, collections: { associatedConsortia } }) => {
 
 const ConsortiaListWithData = compose(
   graphql(CREATE_RUN_MUTATION, saveDocumentProp('createRun', 'consortiumId')),
-  graphql(DELETE_CONSORTIUM_MUTATION, removeDocFromTableProp(
-    'consortiumId',
-    'deleteConsortiumById',
-    FETCH_ALL_CONSORTIA_QUERY,
-    'fetchAllConsortia'
-  )),
+  graphql(
+    DELETE_CONSORTIUM_MUTATION,
+    {
+      props({ mutate }) {
+        return {
+          deleteConsortiumById(consortiumId) {
+            return {
+              variables: {
+                consortiumId
+              },
+              update(store, { data }) {
+                const d = store.readQuery({
+                  query: FETCH_ALL_CONSORTIA_QUERY
+                });
+                const index = d['fetchAllConsortia'].findIndex(con => con.id === data[mutation].id);
+                if (index > -1) {
+                  d['fetchAllConsortia'].splice(index, 1);
+                }
+                store.writeQuery({ query, data: d });
+              }
+            };
+          };
+        };
+      },
+    }
+  ),
   graphql(JOIN_CONSORTIUM_MUTATION, consortiaMembershipProp('joinConsortium')),
   graphql(LEAVE_CONSORTIUM_MUTATION, consortiaMembershipProp('leaveConsortium')),
   graphql(ADD_USER_ROLE_MUTATION, userRolesProp('addUserRole')),
