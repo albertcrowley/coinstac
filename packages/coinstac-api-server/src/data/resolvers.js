@@ -364,7 +364,7 @@ const resolvers = {
 
       return helperFunctions.getRethinkConnection()
         .then(connection =>
-          new Promise.all([
+          Promise.all([
             rethink.table('consortia').get(args.consortiumId)
               .delete({ returnChanges: true })
               .run(connection),
@@ -385,7 +385,7 @@ const resolvers = {
     deletePipeline: ({ auth: { credentials: { permissions } } }, args) => {
       return helperFunctions.getRethinkConnection()
         .then(connection =>
-          new Promise.all([
+          Promise.all([
             connection,
             rethink.table('pipelines').get(args.pipelineId)
               .run(connection)
@@ -485,7 +485,7 @@ const resolvers = {
     removeComputation: ({ auth: { credentials } }, args) => {
       return helperFunctions.getRethinkConnection()
         .then((connection) =>
-          new Promise.all([
+          Promise.all([
             connection,
             rethink.table('computations').get(args.computationId).run(connection)
           ])
