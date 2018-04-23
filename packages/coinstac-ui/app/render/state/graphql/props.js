@@ -1,6 +1,6 @@
 import update from 'immutability-helper';
 import {
-  FETCH_ALL_CONSORTIA_QUERY
+  FETCH_ALL_CONSORTIA_QUERY,
 } from './functions';
 
 export const compIOProp = {
@@ -176,8 +176,7 @@ export const updateUserProp = (name) => {
         variables: { userId, email, institution },
       })
       .then(({ data }) => {
-        console.log(data);
-        // return ownProps.updateUser(user);
+        return ownProps.updateUser(data);
       }),
     }),
   };

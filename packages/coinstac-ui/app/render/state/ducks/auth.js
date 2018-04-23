@@ -128,7 +128,6 @@ export default function reducer(state = INITIAL_STATE, action) {
     case SET_USER:
       return { ...action.payload };
     case UPDATE_USER:
-      console.log('reducer');
       return { user: { ...state.user, user: action.payload } };
     case UPDATE_USER_CONSORTIA_STATUSES:
       return { user: { ...state.user, consortiaStatuses: action.payload } };
