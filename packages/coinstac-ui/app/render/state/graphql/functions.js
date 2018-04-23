@@ -2,7 +2,7 @@ import { gql } from 'react-apollo';
 import { mutations, queries } from 'coinstac-graphql-schema';
 
 export const ADD_COMPUTATION_MUTATION = gql`
-  mutation addComputation($computationSchema: ComputationInput!) 
+  mutation addComputation($computationSchema: ComputationInput!)
     ${mutations.addComputation}
 `;
 
@@ -147,6 +147,11 @@ export const SAVE_CONSORTIUM_MUTATION = gql`
 export const SAVE_PIPELINE_MUTATION = gql`
   mutation savePipeline($pipeline: PipelineInput!)
     ${mutations.savePipeline}
+`;
+
+export const UPDATE_USER_MUTATION = gql`
+  mutation updateUser($userId: ID!, $email: String, $institution: String)
+    ${mutations.updateUser}
 `;
 
 export const UPDATE_USER_CONSORTIUM_STATUS_MUTATION = gql`

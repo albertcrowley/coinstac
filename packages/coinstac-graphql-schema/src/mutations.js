@@ -65,6 +65,13 @@ const mutations = {
       updateRunState(runId: $runId, data: $data)
     }
   `,
+  updateUser: `
+    {
+      updateUser(userId: $userId, email: $email, institution: $institution) {
+        ${sharedFields.userMetadata}
+      }
+    }
+  `,
   updateUserConsortiumStatus: `
     {
       updateUserConsortiumStatus(consortiumId: $consortiumId, status: $status) {

@@ -1,6 +1,6 @@
 import update from 'immutability-helper';
 import {
-  FETCH_ALL_CONSORTIA_QUERY,
+  FETCH_ALL_CONSORTIA_QUERY
 } from './functions';
 
 export const compIOProp = {
@@ -164,6 +164,20 @@ export const userRolesProp = (name) => {
       })
       .then(({ data: { [name]: { permissions } } }) => {
         return ownProps.updateUserPerms(permissions);
+      }),
+    }),
+  };
+};
+
+export const updateUserProp = (name) => {
+  return {
+    props: ({ ownProps, mutate }) => ({
+      [name]: (userId, email, institution) => mutate({
+        variables: { userId, email, institution },
+      })
+      .then(({ data }) => {
+        console.log(data);
+        // return ownProps.updateUser(user);
       }),
     }),
   };

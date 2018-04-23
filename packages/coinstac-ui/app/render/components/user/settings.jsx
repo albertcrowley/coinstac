@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { notifyError, notifyInfo } from '../../state/ducks/notifyAndLog';
 import { clearCollectionsAndConsortia } from '../../state/ducks/collections';
 import { clearRuns } from '../../state/ducks/runs';
+import UserEdit from './user-edit-controller';
 
 class Settings extends Component {
   constructor(props) {
@@ -26,6 +27,8 @@ class Settings extends Component {
         <div className="page-header">
           <h1>Settings</h1>
         </div>
+        <h2>User Profile</h2>
+        <UserEdit />
         <h2>Remove Data</h2>
         <form method="post" onSubmit={this.clearData}>
           <h3 className="h4">Clear local data</h3>

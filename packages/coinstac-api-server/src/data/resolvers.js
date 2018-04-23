@@ -418,7 +418,7 @@ const resolvers = {
         return Boom.forbidden('Action not permitted');
       }
 
-      
+
       return helperFunctions.getRethinkConnection()
         .then((connection) =>
           rethink.table('consortia').get(args.consortiumId)
@@ -635,6 +635,26 @@ const resolvers = {
           .run(connection);
         });
           // .then(result => result.changes[0].new_val)
+    },
+    /**
+     * Update user account by User ID
+     * @param {object} auth User object from JWT middleware validateFunc
+     * @param {object} args
+     * @param {string} args.userId User id to update
+     * @param {string} args.email Email to update
+     * @param {string} args.institution Institution to update
+     * @return {object} The updated user object
+     */
+    updateUser: ({ auth: { credentials } }, { userId, email, institution }) => {
+      return helperFunctions.getRethinkConnection()
+      .then(connection =>
+        rethink.table('users')
+          .get(userId).update({ email, institution })
+          .run(connection)
+      ).then(result =>
+        helperFunctions.getUserDetails({ username: credentials.id })
+      )
+      .then((result) => { updateUser: result })
     },
     /**
      * Saves consortium

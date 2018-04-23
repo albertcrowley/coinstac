@@ -69,14 +69,14 @@ const typeDefs = `
     id: ID!
     controller: PipelineController
     computations: [Computation]
-    ${sharedFields.pipelineStepFields} 
+    ${sharedFields.pipelineStepFields}
   }
 
   input PipelineStepInput {
     id: ID
     controller: PipelineControllerInput
     computations: [ID]
-    ${sharedFields.pipelineStepFields} 
+    ${sharedFields.pipelineStepFields}
   }
 
   type Pipeline {
@@ -138,6 +138,7 @@ const typeDefs = `
     setActiveComputation(computationId: ID, consortiumId: ID): String
     setComputationInputs(consortiumId: ID, fieldIndex: Int, values: String ): String
     updateRunState(runId: ID, data: JSON): JSON
+    updateUser(userId: ID, email: String, institution: String): User
     updateUserConsortiumStatus(consortiumId: ID, status: String): User
   }
 

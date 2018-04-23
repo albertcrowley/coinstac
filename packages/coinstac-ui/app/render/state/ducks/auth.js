@@ -21,12 +21,14 @@ const INITIAL_STATE = {
 const SET_USER = 'SET_USER';
 const CLEAR_USER = 'CLEAR_USER';
 const CLEAR_ERROR = 'CLEAR_ERROR';
+const UPDATE_USER = 'UPDATE_USER';
 const UPDATE_USER_CONSORTIA_STATUSES = 'UPDATE_USER_CONSORTIA_STATUSES';
 const UPDATE_USER_PERMS = 'UPDATE_USER_PERMS';
 
 // Action Creators
-const setUser = user => ({ type: SET_USER, payload: user });
+export const setUser = user => ({ type: SET_USER, payload: user });
 export const clearError = () => ({ type: CLEAR_ERROR, payload: null });
+export const updateUser = user => ({ type: UPDATE_USER, payload: user });
 export const updateUserPerms = perms => ({ type: UPDATE_USER_PERMS, payload: perms });
 export const updateUserConsortiaStatuses = statuses =>
   ({ type: UPDATE_USER_CONSORTIA_STATUSES, payload: statuses });
@@ -125,6 +127,9 @@ export default function reducer(state = INITIAL_STATE, action) {
       return { user: state.user };
     case SET_USER:
       return { ...action.payload };
+    case UPDATE_USER:
+      console.log('reducer');
+      return { user: { ...state.user, user: action.payload } };
     case UPDATE_USER_CONSORTIA_STATUSES:
       return { user: { ...state.user, consortiaStatuses: action.payload } };
     case UPDATE_USER_PERMS:
