@@ -3,7 +3,7 @@
 import { error, info, success, warning } from 'react-notification-system-redux';
 import { ipcRenderer } from 'electron';
 
-const defaultNotification = { autoDismiss: 2 };
+const defaultNotification = { autoDismiss: 5, dismissible: 'both' };
 
 // Action Creators
 export const writeLog = (message =>
