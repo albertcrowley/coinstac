@@ -12,9 +12,21 @@ class MultiSelectField extends Component {
     this.handleSelectChange = this.handleSelectChange.bind(this);
   }
 
+  removeFromArray(array, element) {
+    return array.filter(e => e !== element);
+  }
+
   handleSelectChange(value) {
-    this.setState({ value });
-    this.props.change(value);
+    if( value === 'All' ){
+      let options = this.props.options;
+      let optionsArr = this.removeFromArray(options, "All");
+      options = optionsArr.toString();
+      this.setState({ value: optionsArr });
+      this.props.change(options);
+    }else{
+      this.setState({ value });
+      this.props.change(value);
+    }
   }
 
   render() {
