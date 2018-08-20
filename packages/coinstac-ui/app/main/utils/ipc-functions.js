@@ -20,6 +20,9 @@ module.exports = {
       })
       .then(([metaFilePath, metaFile, files]) => ({ metaFilePath, metaFile, files, extension: '.csv' }));
   },
+  readBidsDirectory(result) {
+    return result;
+  },
   returnFileAsJSON(filePath, core) {
     return core.constructor.getJSONSchema(filePath[0]);
   },

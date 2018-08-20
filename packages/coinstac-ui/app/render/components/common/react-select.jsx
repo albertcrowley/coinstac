@@ -44,7 +44,7 @@ MultiSelectField.propTypes = {
   change: PropTypes.func.isRequired,
   options: PropTypes.array.isRequired,
   placeholder: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.array.isRequired,
 };
 
 export default MultiSelectField;

@@ -13,6 +13,7 @@ import {
 import PropTypes from 'prop-types';
 import ipcPromise from 'ipc-promise';
 import shortid from 'shortid';
+import electronFs from 'fs';
 import { unmapAssociatedConsortia } from '../../state/ducks/collections';
 
 const styles = {
@@ -27,11 +28,12 @@ class CollectionFiles extends Component {
       filesError: null,
       newFile: {
         open: false,
-        org: '',
+        org: 'bids',
       },
       showFiles: {},
     };
 
+    this.addFile = this.addFile.bind(this);
     this.addFileGroup = this.addFileGroup.bind(this);
     this.addFilesToGroup = this.addFilesToGroup.bind(this);
     this.removeFileGroup = this.removeFileGroup.bind(this);
@@ -39,8 +41,60 @@ class CollectionFiles extends Component {
     this.updateNewFileOrg = this.updateNewFileOrg.bind(this);
   }
 
+  addFile() {
+    ipcPromise.send('open-dialog', 'bids')
+    .then((obj) => {
+      let newFiles;
+
+      const fileGroupId = shortid.generate();
+
+      if (obj.error) {
+        this.setState({ filesError: obj.error });
+      } else {
+        const name = `Bids Folder`;
+        //
+        let path = obj[0]
+
+        let files = [];
+
+        electronFs.readdir(path, (err, items) => {
+          for (var i=0; i<items.length; i++) {
+              var file = path + '/' + items[i];
+              files.push(file);
+          }
+        });
+
+        console.log(files);
+
+        newFiles = {
+          name,
+          id: fileGroupId,
+          files: [files],
+          date: new Date().getTime(),
+          org: this.state.newFile.org,
+        };
+
+        console.log(newFiles);
+
+        this.setState({ showFiles: { [newFiles.date]: false } });
+
+        this.setState({ filesError: null });
+        this.props.updateCollection(
+          {
+            fileGroups: {
+              ...this.props.collection.fileGroups,
+              [fileGroupId]: newFiles,
+            },
+          },
+          this.props.saveCollection
+        );
+      }
+    })
+    .catch(console.log);
+  }
+
   addFileGroup() {
-    ipcPromise.send('open-dialog', this.state.newFile.org)
+    ipcPromise.send('open-dialog', 'metafile')
     .then((obj) => {
       let newFiles;
 
@@ -167,42 +221,18 @@ class CollectionFiles extends Component {
       <div>
         <Form onSubmit={saveCollection}>
           <h3>Collection Files</h3>
-          <Button
-            bsStyle="primary"
-            style={{ marginBottom: 10 }}
-            onClick={() => this.setState({ newFile: { open: !this.state.newFile.open } })}
-          >
-            Add Group
-          </Button>
 
-          <Panel
-            collapsible
-            expanded={this.state.newFile.open}
-          >
-            <p className="bold">The organization of my files is best derived via:</p>
-            <FormGroup>
-              <Radio
-                name="radioGroup"
-                checked={this.state.newFile.org === 'metafile'}
-                onChange={this.updateNewFileOrg}
-                value="metafile"
-              >
-                A metadata file containing file paths and covariates.
-              </Radio>
-              <Radio
-                name="radioGroup"
-                checked={this.state.newFile.org === 'manual'}
-                onChange={this.updateNewFileOrg}
-                value="manual"
-              >
-                Manually Select Files
-              </Radio>
-            </FormGroup>
-
+          <Panel>
             <Button
               block
               bsStyle="primary"
-              disabled={!this.state.newFile.org}
+              onClick={this.addFile}
+            >
+              Add BIDS File Directory
+            </Button>
+            <Button
+              block
+              bsStyle="primary"
               onClick={this.addFileGroup}
             >
               Add Files Group
@@ -218,6 +248,38 @@ class CollectionFiles extends Component {
 
           {Object.values(collection.fileGroups).map(group => (
             <Panel key={`${group.date}-${group.extension}-${group.firstRow}`}>
+              {group.org === 'bids' &&
+                <div>
+                  {console.log(group.files[0])}
+                  <Button
+                    bsStyle="danger"
+                    className="pull-right"
+                    onClick={this.removeFileGroup(group.id)}
+                  >
+                    <span aria-hidden="true" className="glyphicon glyphicon-trash" />
+                    {' '}
+                    Remove File Group
+                  </Button>
+                  <p style={styles.fileLabelRow}>
+                    <span className="bold">Name:</span> {group.name}
+                  </p>
+                  <p style={styles.fileLabelRow}>
+                    <span className="bold">Date:</span> {new Date(group.date).toUTCString()}
+                  </p>
+                  <Accordion>
+                    <Panel
+                      header={`BIDS Files (${group.files[0].length}):`}
+                      style={{ marginTop: 10 }}
+                    >
+                      {group.files[0].map((file, fileIndex) =>
+                        (<div key={file} style={{ marginBottom: 5 }}>
+                          {file}
+                        </div>)
+                      )}
+                    </Panel>
+                  </Accordion>
+                </div>
+              }
               {group.org === 'metafile' &&
                 <div>
                   <Button

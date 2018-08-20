@@ -164,6 +164,7 @@ class CollectionPipelineInput extends Component {
                         .computation.output[val.fromCache.variable].type
                 }
                 <br />
+                {console.log(val)}
                 {val.source === 'file' || inputDataTypes.indexOf(val.type) > -1 ?
                     (
                       <span>

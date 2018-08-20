@@ -38,13 +38,7 @@ class Result extends Component {
           displayTypes,
         });
 
-        if(!displayTypes.length){
-          let array = [];
-          array[0] = displayTypes;
-          displayTypes = array;
-        }
-
-        if (displayTypes && displayTypes.findIndex(disp => disp.type === 'scatter_plot') > -1) {
+        if (displayTypes && displayTypes.length > 0 && displayTypes.findIndex(disp => disp.type === 'scatter_plot') > -1) {
           plotData.testData = [];
           run.results.plots.map(result => (
             result.coordinates.map(val => (
@@ -55,7 +49,7 @@ class Result extends Component {
               })
             )
           )));
-        } else if (displayTypes && displayTypes.findIndex(disp => disp.type === 'box_plot') > -1) {
+        } else if (displayTypes && displayTypes.length > 0 && displayTypes.findIndex(disp => disp.type === 'box_plot') > -1) {
           plotData.testData = [];
           run.results.x.map(val => (
             plotData.testData.push(val)
@@ -90,10 +84,12 @@ class Result extends Component {
         .inputMap.covariates.ownerMappings.map(m => m.name);
     }
 
-    if(!displayTypes.length){
-      let array = [];
-      array[0] = displayTypes;
-      displayTypes = array;
+    if (typeof displayTypes === 'object' && Object.keys(displayTypes).length === 1) {
+      const darray = [];
+      Object.keys(displayTypes).map((key) => {
+        return darray.push({ type: displayTypes[key] });
+      });
+      displayTypes = darray;
     }
 
     return (
@@ -139,7 +135,7 @@ class Result extends Component {
         </Well>
 
         <Tabs defaultActiveKey={0} id="uncontrolled-tab-example">
-          {run && run.results && displayTypes.map((disp, index) => {
+          {run && run.results && displayTypes.length > 0 && displayTypes.map((disp, index) => {
             const title = disp.type.replace('_', ' ')
               .replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
             return (
@@ -167,20 +163,21 @@ class Result extends Component {
                   />
                 }
                 {disp.type === 'images' &&
-                  <Images
-                    plotData={this.state.plotData}
-                  />
+                  <Images plotData={this.state.plotData} />
+                }
+                {disp.type === 'string' &&
+                  <div className={'resultString'}></div>
                 }
               </Tab>
             );
           })}
         </Tabs>
 
-        {run && run.error &&
+        {run && run.error ?
           <Well style={{ color: 'red' }}>
-            {JSON.stringify(run.error.message, null, 2)}
+              {run.error.message}
           </Well>
-        }
+        : ''}
       </div>
     );
   }
