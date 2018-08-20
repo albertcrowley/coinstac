@@ -24,6 +24,8 @@ export default class PipelineStepInput extends Component {
 
     this.state = {
       isClientProp: props.objKey === 'covariates' || props.objKey === 'data',
+      filepath: '',
+      tempval: '',
     };
 
     this.addClientProp = this.addClientProp.bind(this);
@@ -192,7 +194,65 @@ export default class PipelineStepInput extends Component {
                   <p>{objParams.description}</p>
                 }
 
-                {objParams.type === 'number' &&
+                {objParams.type === 'file'  &&
+                  <div>
+                    <FormControl
+                      type="file"
+                      value={this.state.tempval}
+                      onChange={(e) => {
+                        updateStep({
+                        ...step,
+                        inputMap: this.getNewObj(objKey,
+                          this[objKey].value ? { value: e.target.files[0].path } : 'DELETE_VAR'
+                        ),
+                        });
+                        this.setState({
+                          filepath: e.target.files[0].path,
+                        });
+                      }}
+                      onChange={(e) => this.setState({
+                        tempval: e.target.value,
+                        filepath: e.target.files[0].path,
+                      })}
+                    />
+                    <FormControl
+                      key={`${this[objKey]}`}
+                      disabled={!owner || isFromCache}
+                      inputRef={(input) => { this[objKey] = input; }}
+                      onChange={() => {
+                        updateStep({
+                        ...step,
+                        inputMap: this.getNewObj(objKey,
+                          this[objKey].value ? { value: this.state.filepath } : 'DELETE_VAR'
+                        ),
+                        });
+                      }}
+                      type="string"
+                      value={this.state.filepath}
+                    />
+                  </div>
+                }
+
+                {objParams.type === 'string'  &&
+                  <FormControl
+                    key={`${this[objKey]}`}
+                    disabled={!owner || isFromCache}
+                    inputRef={(input) => { this[objKey] = input; }}
+                    onChange={() => updateStep({
+                      ...step,
+                      inputMap: this.getNewObj(objKey,
+                        this[objKey].value ? { value: this[objKey].value } : 'DELETE_VAR'
+                      ),
+                    })}
+                    type="string"
+                    value={
+                      step.inputMap[objKey] && 'value' in step.inputMap[objKey] ?
+                      step.inputMap[objKey].value : ''
+                    }
+                  />
+                }
+
+                {objParams.type === 'number'  &&
                   <FormControl
                     disabled={!owner || isFromCache}
                     inputRef={(input) => { this[objKey] = input; }}
@@ -280,6 +340,7 @@ export default class PipelineStepInput extends Component {
                 }
               </FormGroup>
             </Col>
+            {/*
             <Col xs={6} style={{ paddingTop: 25 }}>
               <DropdownButton
                 id={`input-source-${objKey}-dropdown`}
@@ -327,6 +388,7 @@ export default class PipelineStepInput extends Component {
                 ))}
               </DropdownButton>
             </Col>
+            */}
           </Row>
         }
       </div>

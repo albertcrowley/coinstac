@@ -309,6 +309,7 @@ class Pipeline extends Component {
   }
 
   updateStep(step) {
+    console.log(step);
     this.setState(prevState => ({
       pipeline: {
         ...prevState.pipeline,
