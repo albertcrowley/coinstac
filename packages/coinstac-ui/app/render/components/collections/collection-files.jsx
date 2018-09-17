@@ -28,23 +28,24 @@ class CollectionFiles extends Component {
       filesError: null,
       newFile: {
         open: false,
-        org: 'bids',
+        org: '',
       },
       showFiles: {},
     };
 
-    this.addFile = this.addFile.bind(this);
+    this.addBids = this.addBids.bind(this);
+    this.addSingle = this.addSingle.bind(this);
     this.addFileGroup = this.addFileGroup.bind(this);
     this.addFilesToGroup = this.addFilesToGroup.bind(this);
     this.removeFileGroup = this.removeFileGroup.bind(this);
     this.removeFileInGroup = this.removeFileInGroup.bind(this);
-    this.updateNewFileOrg = this.updateNewFileOrg.bind(this);
   }
 
-  addFile() {
+  addBids() {
+    this.setState({ newFile: { ...this.state.newFile, org: 'bids' } });
     ipcPromise.send('open-dialog', 'bids')
     .then((obj) => {
-      let newFiles;
+      let filePath;
 
       const fileGroupId = shortid.generate();
 
@@ -52,38 +53,78 @@ class CollectionFiles extends Component {
         this.setState({ filesError: obj.error });
       } else {
         const name = `Bids Folder`;
-        //
+
         let path = obj[0]
 
-        let files = [];
+        // Might want to grab the contents of the Dir someday...
+        // let files = [];
+        // electronFs.readdir(path, (err, items) => {
+        //   for (var i=0; i<items.length; i++) {
+        //       var file = path + '/' + items[i];
+        //       files.push(file);
+        //   }
+        // });
 
-        electronFs.readdir(path, (err, items) => {
-          for (var i=0; i<items.length; i++) {
-              var file = path + '/' + items[i];
-              files.push(file);
-          }
-        });
+        console.log(path);
 
-        console.log(files);
-
-        newFiles = {
+        filePath = {
           name,
           id: fileGroupId,
-          files: [files],
+          files: path,
           date: new Date().getTime(),
           org: this.state.newFile.org,
         };
 
-        console.log(newFiles);
+        console.log(filePath);
 
-        this.setState({ showFiles: { [newFiles.date]: false } });
+        this.setState({ showFiles: { [filePath.date]: false } });
 
         this.setState({ filesError: null });
         this.props.updateCollection(
           {
             fileGroups: {
               ...this.props.collection.fileGroups,
-              [fileGroupId]: newFiles,
+              [fileGroupId]: filePath,
+            },
+          },
+          this.props.saveCollection
+        );
+      }
+    })
+    .catch(console.log);
+  }
+
+  addSingle() {
+    this.setState({ newFile: { ...this.state.newFile, org: 'single' } });
+    ipcPromise.send('open-dialog', 'single')
+    .then((obj) => {
+      let newFile;
+
+      const fileGroupId = shortid.generate();
+
+      if (obj.error) {
+        this.setState({ filesError: obj.error });
+      } else {
+        const name = `Single File to Collection`;
+
+        newFile = {
+          name,
+          id: fileGroupId,
+          files: obj[0],
+          date: new Date().getTime(),
+          org: this.state.newFile.org,
+        };
+
+        console.log(newFile);
+
+        this.setState({ showFiles: { [newFile.date]: false } });
+
+        this.setState({ filesError: null });
+        this.props.updateCollection(
+          {
+            fileGroups: {
+              ...this.props.collection.fileGroups,
+              [fileGroupId]: newFile,
             },
           },
           this.props.saveCollection
@@ -94,6 +135,7 @@ class CollectionFiles extends Component {
   }
 
   addFileGroup() {
+    this.setState({ newFile: { ...this.state.newFile, org: 'metafile' } });
     ipcPromise.send('open-dialog', 'metafile')
     .then((obj) => {
       let newFiles;
@@ -142,6 +184,7 @@ class CollectionFiles extends Component {
   }
 
   addFilesToGroup(groupId, extension) {
+    this.setState({ newFile: { ...this.state.newFile, org: 'manual' } });
     return () => {
       ipcPromise.send('open-dialog', this.state.newFile.org)
       .then((obj) => {
@@ -207,10 +250,6 @@ class CollectionFiles extends Component {
     };
   }
 
-  updateNewFileOrg(ev) {
-    this.setState({ newFile: { ...this.state.newFile, org: ev.target.value } });
-  }
-
   render() {
     const {
       collection,
@@ -226,7 +265,14 @@ class CollectionFiles extends Component {
             <Button
               block
               bsStyle="primary"
-              onClick={this.addFile}
+              onClick={this.addSingle}
+            >
+              Add Single File to Collection
+            </Button>
+            <Button
+              block
+              bsStyle="primary"
+              onClick={this.addBids}
             >
               Add BIDS File Directory
             </Button>
@@ -248,9 +294,8 @@ class CollectionFiles extends Component {
 
           {Object.values(collection.fileGroups).map(group => (
             <Panel key={`${group.date}-${group.extension}-${group.firstRow}`}>
-              {group.org === 'bids' &&
+              {group.org === 'bids' && group.files &&
                 <div>
-                  {console.log(group.files[0])}
                   <Button
                     bsStyle="danger"
                     className="pull-right"
@@ -258,7 +303,30 @@ class CollectionFiles extends Component {
                   >
                     <span aria-hidden="true" className="glyphicon glyphicon-trash" />
                     {' '}
-                    Remove File Group
+                    Remove Folder
+                  </Button>
+                  <p style={styles.fileLabelRow}>
+                    <span className="bold">Name:</span> {group.name}
+                  </p>
+                  <p style={styles.fileLabelRow}>
+                    <span className="bold">Date:</span> {new Date(group.date).toUTCString()}
+                  </p>
+                  <p style={styles.fileLabelRow}>
+                    <span className="bold">File Path:</span> {group.files}
+                  </p>
+                </div>
+              }
+              {group.org === 'single' && group.files[0].length > 0 &&
+                <div>
+                  {console.log(group.files)}
+                  <Button
+                    bsStyle="danger"
+                    className="pull-right"
+                    onClick={this.removeFileGroup(group.id)}
+                  >
+                    <span aria-hidden="true" className="glyphicon glyphicon-trash" />
+                    {' '}
+                    Remove File
                   </Button>
                   <p style={styles.fileLabelRow}>
                     <span className="bold">Name:</span> {group.name}
@@ -268,14 +336,12 @@ class CollectionFiles extends Component {
                   </p>
                   <Accordion>
                     <Panel
-                      header={`BIDS Files (${group.files[0].length}):`}
+                      header={`File (${group.files[0].length}):`}
                       style={{ marginTop: 10 }}
                     >
-                      {group.files[0].map((file, fileIndex) =>
-                        (<div key={file} style={{ marginBottom: 5 }}>
-                          {file}
-                        </div>)
-                      )}
+                    <div style={{ marginBottom: 5 }}>
+                      {group.files}
+                    </div>
                     </Panel>
                   </Accordion>
                 </div>

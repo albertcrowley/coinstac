@@ -30,6 +30,8 @@ function iteratePipelineSteps(consortium, filesByGroup, baseDirectory) {
 
     const inputKeys = Object.keys(inputMap);
 
+    console.trace(step);
+
     for (let keyIndex = 0; keyIndex < inputKeys.length; keyIndex += 1) {
       const key = inputKeys[keyIndex];
       const e = new RegExp(/[-\/\\^$*+?.()|[\]{}]/g); // eslint-disable-line no-useless-escape
@@ -211,6 +213,10 @@ localDB.associatedConsortia.get(consortiumId)
     collections = iteratePipelineSteps(consortium);
   }
 
+  console.log("Consortium ID:"+consortiumId);
+
+  console.log(collections);
+
   if ('error' in collections) {
     return localDB.associatedConsortia.update(consortium.id, { isMapped: false })
     .then(() => {
@@ -238,6 +244,7 @@ localDB.associatedConsortia.get(consortiumId)
       const filesByGroup = {};
       let metaDir;
       localDBCols.forEach((coll) => {
+        console.log('collection file:'+coll);
         Object.values(coll.fileGroups).forEach((group) => {
           allFiles = allFiles.concat(coll.fileGroups[group.id].files);
           if ('metaFile' in group) {
@@ -397,6 +404,7 @@ export const saveCollection = applyAsyncLoading(collection =>
   dispatch =>
     localDB.collections.put(collection)
       .then(() => {
+        console.log(collection);
         dispatch(({
           type: SAVE_COLLECTION,
           payload: collection,

@@ -168,6 +168,9 @@ class Dashboard extends Component {
             run.consortiumId, consortium.name, run.pipelineSnapshot.steps
           )
           .then((filesArray) => {
+
+            console.log(filesArray);
+
             let status = 'started';
 
             if ('error' in filesArray) {

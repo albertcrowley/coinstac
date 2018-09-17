@@ -76,6 +76,7 @@ class CollectionTabs extends Component {
       .then((runs) => {
         return this.props.getCollectionFiles(cons.id)
         .then((filesArray) => {
+          console.trace(filesArray);
           if (runs && runs.length && runs[runs.length - 1].status === 'needs-map') {
             let run = runs[runs.length - 1];
             const consortium = this.props.consortia.find(obj => obj.id === run.consortiumId);
