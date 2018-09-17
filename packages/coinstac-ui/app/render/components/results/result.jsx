@@ -169,6 +169,9 @@ class Result extends Component {
                     title={`${consortium.name}_${run.pipelineSnapshot.name}`}
                   />
                 }
+                {disp.type === 'string' &&
+                  <div className={'resultString'}></div>
+                }
               </Tab>
             );
           })}
