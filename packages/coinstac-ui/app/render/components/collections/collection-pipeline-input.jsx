@@ -136,7 +136,7 @@ class CollectionPipelineInput extends Component {
 
   render() {
     const { collection, objKey, objValue, pipelineSteps, stepIndex } = this.props;
-
+    let gfile = Object.values(collection.fileGroups);
     return (
       <div>
         <span className="bold">{objKey}: </span>
@@ -164,7 +164,29 @@ class CollectionPipelineInput extends Component {
                         .computation.output[val.fromCache.variable].type
                 }
                 <br />
-                {val.source === 'file' || inputDataTypes.indexOf(val.type) > -1 ?
+                {val.type === 'BIDS' ?
+                  <span>
+                    <em>Source Group: </em>
+                    <select
+                      value={this.state.sources[covarIndex].groupId}
+                      required
+                      onChange={this.setSourceFile(covarIndex)}
+                    >
+                      <option disabled value="" key="file-select-none">Select a File</option>
+                      {Object.values(collection.fileGroups)
+                        .map(group =>
+                        (
+                          <option
+                            key={group.name}
+                            value={group.id}
+                          >
+                            {group.name}
+                          </option>
+                        )
+                      )}
+                    </select><br />
+                  </span>
+                  : val.source === 'file' || inputDataTypes.indexOf(val.type) > -1 ?
                     (
                       <span>
                         <em>Source Group: </em>
@@ -209,7 +231,7 @@ class CollectionPipelineInput extends Component {
                   && this.state.sources[covarIndex].groupId.length > 0 &&
                   collection.fileGroups[
                     this.state.sources[covarIndex].groupId
-                  ].metaFile &&
+                  ].metaFile ?
                     <span>
                       <em>File Column: </em>
                       <select
@@ -249,7 +271,30 @@ class CollectionPipelineInput extends Component {
                         })}
                       </select>
                     </span>
-                }
+                : ''}
+                {this.state.sources[covarIndex].groupId && val.type === 'BIDS' ?
+                    <span>
+                      <em>File Column: </em>
+                      {collection.fileGroups[
+                        this.state.sources[covarIndex].groupId
+                        ].files ?
+                          <select
+                            value={this.state.sources[covarIndex].column}
+                            required
+                            onChange={this.setSourceColumn(covarIndex)}
+                          >
+                            <option>Select Path</option>
+                            <option
+                              key={'BIDS'}
+                              value={'BIDS'}
+                            >
+                              {'BIDS'}
+                            </option>
+                          </select>
+                         : ''
+                      }
+                    </span>
+                : ''}
               </li>
             ))}
           </ul>

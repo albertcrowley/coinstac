@@ -100,7 +100,6 @@ loadConfig()
    * @return {Promise<String>} Status message
    */
   ipcMain.on('start-pipeline', (event, { consortium, pipeline, filesArray, run }) => {
-    console.log(filesArray);
     const computationImageList = pipeline.steps
     .map(step => step.computations
       .map(comp => comp.computation.dockerImage))
@@ -321,7 +320,7 @@ loadConfig()
       properties = ['openFile'];
       postDialogFunc = ipcFunctions.addFile;
     } else if (org === 'bids') {
-      properties = ['openDirectory', 'multiSelections'];
+      properties = ['openDirectory'];
       postDialogFunc = ipcFunctions.readBidsDirectory;
     } else if (org === 'jsonschema') {
       filters = [{

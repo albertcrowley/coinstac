@@ -170,7 +170,7 @@ class Result extends Component {
                   />
                 }
                 {disp.type === 'string' &&
-                  <div className={'resultString'}></div>
+                  <div className={'resultString'}>{this.state.plotData}</div>
                 }
               </Tab>
             );

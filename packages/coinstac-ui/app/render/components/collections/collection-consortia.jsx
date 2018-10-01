@@ -49,6 +49,8 @@ class CollectionConsortia extends Component {
   }
 
   setPipelineSteps(steps) {
+
+    console.log("steps: "+JSON.stringify(steps));
     // Prepopulate stepIO with same number of steps as pipeline to ensure indices match
     // TODO: Add section specifically for covars and prepopulate empty values for all params?
     const stepIO = Array(steps.length)

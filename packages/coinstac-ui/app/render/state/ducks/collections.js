@@ -27,10 +27,7 @@ function iteratePipelineSteps(consortium, filesByGroup, baseDirectory) {
   for (let sIndex = 0; sIndex < consortium.pipelineSteps.length; sIndex += 1) {
     const step = consortium.pipelineSteps[sIndex];
     const inputMap = { ...step.inputMap };
-
     const inputKeys = Object.keys(inputMap);
-
-    console.trace(step);
 
     for (let keyIndex = 0; keyIndex < inputKeys.length; keyIndex += 1) {
       const key = inputKeys[keyIndex];
@@ -50,7 +47,6 @@ function iteratePipelineSteps(consortium, filesByGroup, baseDirectory) {
         && consortium.stepIO[sIndex][key][mappingIndex].column) {
           const { groupId, collectionId } = consortium.stepIO[sIndex][key][mappingIndex];
           collections.push({ groupId, collectionId });
-
           // This changes by how the parser is reading in files - concat or push
           if (filesByGroup) {
             // Cast col types
@@ -213,9 +209,15 @@ localDB.associatedConsortia.get(consortiumId)
     collections = iteratePipelineSteps(consortium);
   }
 
-  console.log("Consortium ID:"+consortiumId);
+//BIDS not setting a collection WTF!
 
-  console.log(collections);
+  console.log("Pipeline Steps: "+ JSON.stringify(consortium.pipelineSteps));
+
+  console.log("Consortium ID: "+ consortiumId);
+
+  console.log("consortium.id: "+ consortium.id);
+
+  console.log("Collections: "+ JSON.stringify(collections.collections));
 
   if ('error' in collections) {
     return localDB.associatedConsortia.update(consortium.id, { isMapped: false })
@@ -244,7 +246,6 @@ localDB.associatedConsortia.get(consortiumId)
       const filesByGroup = {};
       let metaDir;
       localDBCols.forEach((coll) => {
-        console.log('collection file:'+coll);
         Object.values(coll.fileGroups).forEach((group) => {
           allFiles = allFiles.concat(coll.fileGroups[group.id].files);
           if ('metaFile' in group) {
@@ -404,7 +405,6 @@ export const saveCollection = applyAsyncLoading(collection =>
   dispatch =>
     localDB.collections.put(collection)
       .then(() => {
-        console.log(collection);
         dispatch(({
           type: SAVE_COLLECTION,
           payload: collection,

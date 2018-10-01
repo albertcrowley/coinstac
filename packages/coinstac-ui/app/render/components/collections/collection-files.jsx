@@ -65,14 +65,13 @@ class CollectionFiles extends Component {
         //   }
         // });
 
-        console.log(path);
-
         filePath = {
           name,
           id: fileGroupId,
           files: path,
           date: new Date().getTime(),
           org: this.state.newFile.org,
+          type: 'bids',
         };
 
         console.log(filePath);
@@ -114,8 +113,6 @@ class CollectionFiles extends Component {
           date: new Date().getTime(),
           org: this.state.newFile.org,
         };
-
-        console.log(newFile);
 
         this.setState({ showFiles: { [newFile.date]: false } });
 
