@@ -316,9 +316,6 @@ loadConfig()
       }];
       properties = ['openFile'];
       postDialogFunc = ipcFunctions.parseCSVMetafile;
-    } else if (org === 'bids') {
-      properties = ['openDirectory', 'multiSelections'];
-      postDialogFunc = ipcFunctions.readBidsDirectory;
     } else if (org === 'jsonschema') {
       filters = [{
         name: 'JSON Schema',

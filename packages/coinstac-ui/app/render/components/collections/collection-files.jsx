@@ -28,69 +28,16 @@ class CollectionFiles extends Component {
       filesError: null,
       newFile: {
         open: false,
-        org: 'bids',
+        org: 'metafile',
       },
       showFiles: {},
     };
 
-    this.addFile = this.addFile.bind(this);
     this.addFileGroup = this.addFileGroup.bind(this);
     this.addFilesToGroup = this.addFilesToGroup.bind(this);
     this.removeFileGroup = this.removeFileGroup.bind(this);
     this.removeFileInGroup = this.removeFileInGroup.bind(this);
     this.updateNewFileOrg = this.updateNewFileOrg.bind(this);
-  }
-
-  addFile() {
-    ipcPromise.send('open-dialog', 'bids')
-    .then((obj) => {
-      let newFiles;
-
-      const fileGroupId = shortid.generate();
-
-      if (obj.error) {
-        this.setState({ filesError: obj.error });
-      } else {
-        const name = `Bids Folder`;
-        //
-        let path = obj[0]
-
-        let files = [];
-
-        electronFs.readdir(path, (err, items) => {
-          for (var i=0; i<items.length; i++) {
-              var file = path + '/' + items[i];
-              files.push(file);
-          }
-        });
-
-        console.log(files);
-
-        newFiles = {
-          name,
-          id: fileGroupId,
-          files: [files],
-          date: new Date().getTime(),
-          org: this.state.newFile.org,
-        };
-
-        console.log(newFiles);
-
-        this.setState({ showFiles: { [newFiles.date]: false } });
-
-        this.setState({ filesError: null });
-        this.props.updateCollection(
-          {
-            fileGroups: {
-              ...this.props.collection.fileGroups,
-              [fileGroupId]: newFiles,
-            },
-          },
-          this.props.saveCollection
-        );
-      }
-    })
-    .catch(console.log);
   }
 
   addFileGroup() {
@@ -226,16 +173,9 @@ class CollectionFiles extends Component {
             <Button
               block
               bsStyle="primary"
-              onClick={this.addFile}
-            >
-              Add BIDS File Directory
-            </Button>
-            <Button
-              block
-              bsStyle="primary"
               onClick={this.addFileGroup}
             >
-              Add Files Group
+              Add Collection Files
             </Button>
           </Panel>
 
@@ -250,7 +190,6 @@ class CollectionFiles extends Component {
             <Panel key={`${group.date}-${group.extension}-${group.firstRow}`}>
               {group.org === 'bids' &&
                 <div>
-                  {console.log(group.files[0])}
                   <Button
                     bsStyle="danger"
                     className="pull-right"
