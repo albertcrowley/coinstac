@@ -124,6 +124,46 @@ export const getSelectAndSubProp = (activeProp, document, objId, subProp, subscr
   }),
 });
 
+export const getAndSubToPerms = (activeProp, document, objId, subProp, subscription, query) => {
+  return {
+    options: (props) => {
+      let theId = null;
+
+      if (props[objId]) {
+        theId = props[objId];
+      } else if (props.params[objId]) {
+        theId = props.params[objId];
+      } else if (objId === 'userId') {
+        theId = props.auth.user.id;
+      }
+
+      return {
+        fetchPolicy: 'network-only',
+        variables: { [objId]: theId },
+      };
+    },
+    props: props => {
+      debugger;
+      return {
+        [activeProp]: props.data[query],
+        [subProp]: theId =>
+        props.data.subscribeToMore({
+          document,
+          variables: { [objId]: theId },
+          updateQuery: (prevResult, { subscriptionData: { data } }) => {
+            debugger;
+            if (!data) {
+              return { [query]: null };
+            }
+
+            return { [query]: data[subscription] };
+          },
+        }),
+      };
+    },
+  };
+};
+
 export const pipelinesProp = {
   props: ({ data: { fetchAllPipelines } }) => ({
     pipelines: fetchAllPipelines,

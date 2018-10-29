@@ -131,6 +131,14 @@ const queries = {
       }
     }
   `,
+  userMetadataChanged: `
+    {
+      userMetadataChanged(userId: $userId) {
+        ${sharedFields.userMetadata}
+      }
+    }
+  `,
+
   userRunChanged: `
     {
       userRunChanged(userId: $userId) {

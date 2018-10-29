@@ -1,10 +1,10 @@
+import 'react-bootstrap-typeahead/css/Typeahead.css';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Notifications from 'react-notification-system-redux';
 import ActivityIndicator from './activity-indicator/activity-indicator';
 import { autoLogin } from '../state/ducks/auth';
-import 'react-bootstrap-typeahead/css/Typeahead.css';
 
 const styles = {
   notifications: {
@@ -16,8 +16,8 @@ const styles = {
         boxShadow: 'none',
         fontWeight: 'bold', // This might not be necessary. Use your judgement.
       },
-    }
-  }
+    },
+  },
 };
 
 class App extends Component { // eslint-disable-line react/prefer-stateless-function

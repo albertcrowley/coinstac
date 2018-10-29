@@ -3,7 +3,6 @@ import { compose, graphql, withApollo } from 'react-apollo';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
-import { isEqual } from 'lodash';
 import DashboardNav from './dashboard-nav';
 import UserAccountController from '../user/user-account-controller';
 import {
@@ -29,6 +28,7 @@ import {
   FETCH_ALL_CONSORTIA_QUERY,
   FETCH_ALL_PIPELINES_QUERY,
   FETCH_ALL_USER_RUNS_QUERY,
+  FETCH_USER_QUERY,
   PIPELINE_CHANGED_SUBSCRIPTION,
   USER_CHANGED_SUBSCRIPTION,
   USER_RUN_CHANGED_SUBSCRIPTION,
@@ -36,7 +36,7 @@ import {
 } from '../../state/graphql/functions';
 import {
   getAllAndSubProp,
-  getSelectAndSubProp,
+  getAndSubToPerms,
 } from '../../state/graphql/props';
 
 class Dashboard extends Component {
@@ -57,9 +57,6 @@ class Dashboard extends Component {
   componentDidMount() {
     const { auth: { user } } = this.props;
     const { router } = this.context;
-
-    //console.log(this.props.getDockerStatus());
-
     process.nextTick(() => {
       if (!user.email.length) {
         this.props.writeLog({ type: 'verbose', message: 'Redirecting login (no authorized user)' });
@@ -438,6 +435,7 @@ Dashboard.propTypes = {
   subscribeToConsortia: PropTypes.func.isRequired,
   subscribeToPipelines: PropTypes.func.isRequired,
   subscribeToUserRuns: PropTypes.func.isRequired,
+  subscribeToUserMetaData: PropTypes.func.isRequired,
   syncRemoteLocalConsortia: PropTypes.func.isRequired,
   syncRemoteLocalPipelines: PropTypes.func.isRequired,
   updateDockerOutput: PropTypes.func.isRequired,
@@ -454,6 +452,14 @@ function mapStateToProps({ auth, runs: { runs } }) {
 }
 
 const DashboardWithData = compose(
+  graphql(FETCH_USER_QUERY, getAndSubToPerms(
+    'currentUser',
+    USER_CHANGED_SUBSCRIPTION,
+    'userId',
+    'subscribeToUserMetaData',
+    'userMetadataChanged',
+    'fetchUser'
+  )),
   graphql(FETCH_ALL_COMPUTATIONS_QUERY, getAllAndSubProp(
     COMPUTATION_CHANGED_SUBSCRIPTION,
     'computations',

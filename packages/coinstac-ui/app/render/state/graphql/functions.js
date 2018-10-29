@@ -2,7 +2,7 @@ import { gql } from 'react-apollo';
 import { mutations, queries } from 'coinstac-graphql-schema';
 
 export const ADD_COMPUTATION_MUTATION = gql`
-  mutation addComputation($computationSchema: ComputationInput!) 
+  mutation addComputation($computationSchema: ComputationInput!)
     ${mutations.addComputation}
 `;
 
@@ -136,6 +136,11 @@ export const REMOVE_COMPUTATION_MUTATION = gql`
 export const USER_CHANGED_SUBSCRIPTION = gql`
   subscription userChanged($userId: ID)
     ${queries.userChanged}
+`;
+
+export const USER_METADATA_CHANGED_SUBSCRIPTION = gql`
+  subscription userMetadataChanged($userId: ID)
+    ${queries.userMetadataChanged}
 `;
 
 export const REMOVE_USER_ROLE_MUTATION = gql`
