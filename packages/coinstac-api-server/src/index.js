@@ -28,6 +28,9 @@ server.register(plugins, (err) => {
     });
 
   server.auth.default('jwt');
+
+  // console.log(routes);
+
   server.route(routes);
 });
 

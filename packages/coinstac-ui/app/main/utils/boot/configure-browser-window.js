@@ -31,8 +31,8 @@ function createWindow() {
    * automatically when the javascript object is GCed.
    */
   mainWindow = new BrowserWindow({
-    width: size.width,
-    height: size.height,
+    width: Math.min(size.width, 1920),
+    height: Math.min(size.height, 1080),
   });
 
   mainWindow.loadURL(`file://${renderIndexPath}`);

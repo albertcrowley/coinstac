@@ -24,6 +24,7 @@ module.exports = {
   },
   rules: {
     strict: [0, 'global'], // required for node, configurable for browser, https://github.com/eslint/eslint/issues/2785#issuecomment-113254153
+    'linebreak-style' : 0,
     'arrow-body-style': 0,
     'consistent-return': 0,
     'no-param-reassign': 0,

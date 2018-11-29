@@ -17,8 +17,7 @@ function preprocessPipelineChangedSubs(pipeline) {
           computations: step('computations').map(compId => rethink.table('computations').get(compId)),
         })),
       }))
-      .run(connection)
-    );
+      .run(connection));
 }
 
 module.exports = preprocessPipelineChangedSubs;
