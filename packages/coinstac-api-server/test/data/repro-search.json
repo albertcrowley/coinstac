@@ -1,0 +1,42 @@
+{
+  "meta": {
+    "name": "ReproSearch",
+    "version": "v1.0.0",
+    "repository": "https:\/\/github.com\/albertcrowley\/coinstac-serach",
+    "description": "Decentralized search"
+  },
+  "computation": {
+    "type": "docker",
+    "dockerImage": "albertcrowley/coinstac-repro-search",
+    "command": [
+      "python",
+      "\/computation\/local.py"
+    ],
+    "remote": {
+      "type": "docker",
+      "dockerImage": "coinstac\/coinstac-repro-search",
+      "command": [
+        "python",
+        "\/computation\/remote.py"
+      ]
+    },
+    "input": {
+      "search-string": {
+        "type": "string"
+      }
+    },
+    "output": {
+      "hits": {
+        "type": "string",
+        "label": "Hits"
+      }
+    },
+    "display": [
+      {
+        "type": "table"
+      }
+    ]
+  }
+}
+
+

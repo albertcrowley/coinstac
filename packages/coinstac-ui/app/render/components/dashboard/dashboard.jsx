@@ -367,6 +367,7 @@ class Dashboard extends Component {
     }
 
     if (nextProps.consortia && this.props.consortia.length > 0) {
+      console.log(nextProps.consortia);
       for (let i = 0; i < nextProps.consortia.length; i += 1) {
         // Download Docker images for consortia activePipeline if user is a member
         if (this.props.consortia[i] && nextProps.consortia[i].id === this.props.consortia[i].id

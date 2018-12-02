@@ -443,6 +443,8 @@ const pruneImages = () => {
  * @return {Object} Returns stream of docker pull output
  */
 const pullImage = (computation) => {
+  console.log ("in pull image for:");
+  console.log(computation);
   return new Promise((resolve, reject) => {
     if (process.platform === 'win32') {
       // NOTE: this uses a fixed api version, while this should be respected in docker

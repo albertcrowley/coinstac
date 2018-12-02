@@ -232,6 +232,7 @@ loadConfig()
     ipcPromise.on('get-all-images', () => {
       return core.dockerManager.getImages()
         .then((data) => {
+          console.log(data);
           return data;
         });
     });
@@ -257,6 +258,7 @@ loadConfig()
   * @return {Promise}
   */
     ipcPromise.on('download-comps', (params) => { // eslint-disable-line no-unused-vars
+      console.log (params);
       return core.dockerManager
         .pullImages(params.computations)
         .then((compStreams) => {

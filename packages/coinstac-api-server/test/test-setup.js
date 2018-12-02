@@ -9,6 +9,7 @@ const decentralizedError = require('./data/coinstac-decentralized-error');
 const local = require('./data/coinstac-local-test');
 const localError = require('./data/coinstac-local-error');
 const drneFsl = require('./data/drne_fsl_schema');
+const reproSearch = require('./data/repro-search');
 const helperFunctions = require('../src/auth-helpers');
 
 helperFunctions.getRethinkConnection()
@@ -33,6 +34,7 @@ helperFunctions.getRethinkConnection()
         Object.assign({}, drneVbm, { submittedBy: 'test1' }),
         Object.assign({}, ssrVbm, { submittedBy: 'test1' }),
         Object.assign({}, drneFsl, { submittedBy: 'author' }),
+        Object.assign({}, reproSearch, { submittedBy: 'test1' }),
         Object.assign({}, decentralizedError, { submittedBy: 'test1' }),
         Object.assign({}, localError, { submittedBy: 'test1' }),
       ], { returnChanges: true }).run(connection))
@@ -394,6 +396,25 @@ helperFunctions.getRethinkConnection()
       consortia: {
         'test-cons-1': ['member'],
         'test-cons-2': ['owner'],
+      },
+      pipelines: {},
+    },
+    consortiaStatuses: {
+      'test-cons-1': 'none',
+      'test-cons-2': 'none',
+    },
+  }, passwordHash))
+  .then(() => helperFunctions.hashPassword('crowley'))
+  .then(passwordHash => helperFunctions.createUser({
+    id: 'crowley',
+    username: 'crowley',
+    institution: 'mrn',
+    email: 'crowley@tcg.com',
+    permissions: {
+      computations: {},
+      consortia: {
+        'test-cons-1': ['member'],
+        'test-cons-2': ['member'],
       },
       pipelines: {},
     },
